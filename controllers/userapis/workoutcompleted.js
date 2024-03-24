@@ -128,6 +128,23 @@ const getworkoutcompleted = async (req, res) => {
 				data.user_id,
 				data.completed_date
 			);
+			if (workoutcompleted) {
+				res.status(201).json({
+					data: {
+						success: 0,
+						workoutscompleted: workoutcompleted,
+						error: '',
+					},
+				});
+			} else {
+				res.status(201).json({
+					data: {
+						success: 0,
+						workoutscompleted: [],
+						error: 'Please Try Again',
+					},
+				});
+			}
 		} else {
 			res.status(201).json({
 				data: {
