@@ -31,7 +31,7 @@ const Login = async (req, res) => {
         const payload = {
             userId: AdminUser._id
         };
-        console.log("payload", payload)
+       
         jwt.sign(
             payload,
             process.env.SECRET_KEY,

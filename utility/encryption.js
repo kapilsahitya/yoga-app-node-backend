@@ -1,7 +1,9 @@
 const crypto = require('crypto');
 
 const SECRET_KEY = process.env.SECRET_KEY;  // Replace with your secret key
+exports.SECRET_KEY = SECRET_KEY;
 const SECRET_IV = process.env.SECRET_IV;    // Replace with your secret IV
+exports.SECRET_IV = SECRET_IV;
 
 function encrypt_decrypt(action, string) {
     const encryptMethod = 'aes-256-cbc';
