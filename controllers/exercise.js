@@ -1,3 +1,4 @@
+const { mongoose } = require("mongoose");
 const yogaworkoutExercise = require("../models/exercise")
 
 const getAllExercise = async (req, res) => {
@@ -24,29 +25,27 @@ const getAllExercise = async (req, res) => {
 
 const addExercise = async (req, res) => {
     try {
-        if(!req.body.exerciseName)
-        {
+        if (!req.body.exerciseName) {
             return res.status(400).json({
                 message: "Enter Exercise Name!"
             });
         }
-        if(!req.body.exerciseTime)
-        {
+        if (!req.body.exerciseTime) {
             return res.status(400).json({
                 message: "Enter Exercise Time in Minutes!"
             });
         }
-            
+
         let exerciseName = req.body.exerciseName;
         let exerciseTime = req.body.exerciseTime;
         let description = req.body?.description;
-        let isActive = 1
+        let isActive = req.body.isActive ? req.body.isActive : 1;
 
         const newExercise = new yogaworkoutExercise({
             exerciseName: exerciseName,
-            exerciseTime:exerciseTime,
-            description : description,
-            isActive : isActive,
+            exerciseTime: exerciseTime,
+            description: description,
+            isActive: isActive,
         })
         await newExercise.save();
         res.status(201).json({ message: 'Exercise Added successfully!' });
@@ -59,4 +58,59 @@ const addExercise = async (req, res) => {
     }
 }
 
-module.exports = { getAllExercise, addExercise };
+const updateExercise = async (req, res) => {
+    const exerciseId = req.params.id;
+    let exerciseName = req.body.exerciseName;
+    let exerciseTime = req.body.exerciseTime;
+    let description = req.body?.description;
+    let isActive = req.body.isActive ? req.body.isActive : 1;
+
+    let newExercise = {
+        exerciseName: exerciseName,
+        exerciseTime: exerciseTime,
+        description: description,
+        isActive: isActive,
+    }
+    console.log("newExercise", newExercise)
+    if (mongoose.Types.ObjectId.isValid(exerciseId)) {
+
+        const updatedExercise = await yogaworkoutExercise.findByIdAndUpdate(exerciseId, newExercise, {
+            new: true, // Return the updated document
+            runValidators: true, // Run schema validators on update
+        });
+        if (!updatedExercise) {
+            return res.status(404).json({ error: 'Exercise not found' });
+        }
+
+        res.json(updatedExercise);
+
+    } else {
+        res.status(500).send({
+            message: 'Invalid ObjectId'
+        });
+    }
+}
+
+const deleteExercise = async(req,res) => {
+    const exerciseId = req.params.id;
+
+    if (!mongoose.Types.ObjectId.isValid(exerciseId)) {
+        return res.status(400).json({ error: 'Invalid exercise ID' });
+    }
+
+    try {
+        // Find the user by ID and delete
+        const deletedExercise = await yogaworkoutExercise.findByIdAndDelete(exerciseId);
+
+        if (!deletedExercise) {
+            return res.status(404).json({ error: 'Exercise not found' });
+        }
+
+        res.json({ message: 'Exercise deleted successfully', deletedExercise });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Failed to delete Exercise' });
+    }
+}
+
+module.exports = { getAllExercise, addExercise, updateExercise,deleteExercise };
