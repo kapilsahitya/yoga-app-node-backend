@@ -111,6 +111,7 @@ const updateCategory = async (req, res) => {
 	}
 };
 
+// TODO: Add Logic for check dependency on parent-child records/models
 const deleteCategory = async (req, res) => {
 	const categoryId = req.params.id;
 
