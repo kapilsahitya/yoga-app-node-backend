@@ -12,10 +12,10 @@ const categorySchema = new mongoose.Schema(
         decaription:{
             type:String
         },
-        categoryId:{
-            type: Number,
-            unique: true
-        },
+        // categoryId:{
+        //     type: Number,
+        //     unique: true
+        // },
         isActive:{
             type: Number,
             enum:[1,0],

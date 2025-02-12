@@ -12,10 +12,10 @@ const exerciseSchema = new mongoose.Schema(
         description: {
             type: String
         },
-        exerciseId: {
-            type: Number,
-            unique: true
-        },
+        // exerciseId: {
+        //     type: Number,
+        //     unique: true
+        // },
         exerciseName: {
             type: String,
             required: true

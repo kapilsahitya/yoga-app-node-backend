@@ -14,7 +14,7 @@ router.get('/category', authenticate, getAllCategories);
 
 router.get('/exercise', authenticate, getAllExercise);
 
-router.post('/addexecise', authenticate, addExercise);
+router.post('/addexrecise', authenticate, addExercise);
 
 router.post('/updateexercise/:id', authenticate, updateExercise);
 

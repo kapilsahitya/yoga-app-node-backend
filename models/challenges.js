@@ -10,10 +10,10 @@ const challengesSchema = new mongoose.Schema(
         description: {
             type: String
         },  
-        challengesId: {
-            type: Number,
-            unique: true
-        },
+        // challengesId: {
+        //     type: Number,
+        //     unique: true
+        // },
         challengesName: {
             type: String,
             required: true
