@@ -28,6 +28,7 @@ router.get('/challenges', authenticate, challengesController.getAllChallenges);
 router.post('/addchallenges', authenticate, challengesController.addChallenges);
 router.post('/updatechallenges/:id', authenticate, challengesController.updateChallenges);
 router.post('/deletechallenges/:id', authenticate, challengesController.deleteChallenges);
+router.post('/changeChallengesStatus', authenticate, challengesController.changeChallengesStatus);
 // END: challenges module
 
 module.exports = router;

@@ -1,4 +1,4 @@
-const { mongoose } = require("mongoose");
+const { mongoose, ObjectId  } = require("mongoose");
 const yogaworkoutChallenges = require("../models/challenges")
 
 const getAllChallenges = async (req, res) => {
@@ -82,7 +82,7 @@ const updateChallenges = async (req, res) => {
     }
 }
 
-const deleteChallenges = async(req,res) => {
+const deleteChallenges = async (req, res) => {
     const challengesId = req.params.id;
 
     if (!mongoose.Types.ObjectId.isValid(challengesId)) {
@@ -104,4 +104,29 @@ const deleteChallenges = async(req,res) => {
     }
 }
 
-module.exports = { getAllChallenges, addChallenges, updateChallenges,deleteChallenges };
+const changeChallengesStatus = async (req, res) => {
+    let challengesId = req.body.id.toString();
+    let challengesStatus = req.body.status;
+
+    console.log("req.body", req.body)
+
+    if (mongoose.Types.ObjectId.isValid(challengesId)) {
+
+        const updatedChallenges = await yogaworkoutChallenges.updateOne({_id:challengesId}, { $set: { isActive: challengesStatus } });
+        console.log("updatedChallenges", updatedChallenges)
+        if (!updatedChallenges) {
+            return res.status(404).json({ error: 'Challenges not found' });
+        }
+
+        res.json(updatedChallenges);
+
+    } else {
+        res.status(500).send({
+            message: 'Invalid ObjectId'
+        });
+    }
+
+
+}
+
+module.exports = { getAllChallenges, addChallenges, updateChallenges, deleteChallenges, changeChallengesStatus };
