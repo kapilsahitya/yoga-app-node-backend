@@ -5,6 +5,7 @@ const categoryController = require('../../controllers/category');
 const exerciseController = require('../../controllers/exercise');
 const challengesController = require('../../controllers/challenges');
 const discoverController = require('../../controllers/discover');
+const quickworkoutController = require('../../controllers/quickworkout');
 const router = express.Router();
 
 router.post('/login', Login);
@@ -53,5 +54,15 @@ router.post(
 	discoverController.updateDiscover
 );
 // END: discover module
+
+// START: quickworkout module
+router.get('/quickworkout', authenticate, quickworkoutController.getAllQuickworkouts);
+router.post('/addquickworkout', authenticate, quickworkoutController.addQuickworkout);
+router.post(
+	'/updatequickworkout/:id',
+	authenticate,
+	quickworkoutController.updateQuickworkout
+);
+// END: quickworkout module
 
 module.exports = router;
