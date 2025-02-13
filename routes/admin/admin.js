@@ -6,6 +6,7 @@ const exerciseController = require('../../controllers/exercise');
 const challengesController = require('../../controllers/challenges');
 const discoverController = require('../../controllers/discover');
 const quickworkoutController = require('../../controllers/quickworkout');
+const stretchesController = require('../../controllers/stretches');
 const router = express.Router();
 
 router.post('/login', Login);
@@ -64,5 +65,15 @@ router.post(
 	quickworkoutController.updateQuickworkout
 );
 // END: quickworkout module
+
+// START: stretches module
+router.get('/stretches', authenticate, stretchesController.getAllStretches);
+router.post('/addstretches', authenticate, stretchesController.addStretches);
+router.post(
+	'/updatestretches/:id',
+	authenticate,
+	stretchesController.updateStretches
+);
+// END: stretches module
 
 module.exports = router;

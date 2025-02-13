@@ -36,7 +36,7 @@ const addCategory = async (req, res) => {
 	try {
 		if (!req.body.categoryName) {
 			return res.status(400).json({
-				message: 'Enter Categor Name!',
+				message: 'Enter Category Name!',
 			});
 		}
 
@@ -75,7 +75,7 @@ const addCategory = async (req, res) => {
 const updateCategory = async (req, res) => {
 	if (!req.body.categoryName) {
 		return res.status(400).json({
-			message: 'Enter Categor Name!',
+			message: 'Enter Category Name!',
 		});
 	}
 

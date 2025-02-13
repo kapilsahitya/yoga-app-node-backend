@@ -6,7 +6,7 @@ const getAllQuickworkouts = async (req, res) => {
 		let quickworkouts = await yogaworkoutQuickworkout.find();
 		if (quickworkouts.length === 0) {
 			return res.status(400).json({
-				message: 'No Quickworkouts Added!',
+				message: 'No Quickworkout Added!',
 			});
 		} else {
 			res.status(200).json({
@@ -36,7 +36,7 @@ const addQuickworkout = async (req, res) => {
 	try {
 		if (!req.body.quickworkoutName) {
 			return res.status(400).json({
-				message: 'Enter Categor Name!',
+				message: 'Enter Quick Workout Name!',
 			});
 		}
 
@@ -75,7 +75,7 @@ const addQuickworkout = async (req, res) => {
 const updateQuickworkout = async (req, res) => {
 	if (!req.body.quickworkoutName) {
 		return res.status(400).json({
-			message: 'Enter Categor Name!',
+			message: 'Enter Quick Workout Name!',
 		});
 	}
 

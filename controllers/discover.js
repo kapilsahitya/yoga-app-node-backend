@@ -36,7 +36,7 @@ const addDiscover = async (req, res) => {
 	try {
 		if (!req.body.discoverName) {
 			return res.status(400).json({
-				message: 'Enter Categor Name!',
+				message: 'Enter Discover Name!',
 			});
 		}
 
@@ -75,7 +75,7 @@ const addDiscover = async (req, res) => {
 const updateDiscover = async (req, res) => {
 	if (!req.body.discoverName) {
 		return res.status(400).json({
-			message: 'Enter Categor Name!',
+			message: 'Enter Discover Name!',
 		});
 	}
 
