@@ -1,4 +1,4 @@
-const { mongoose } = require("mongoose");
+const { mongoose } = require('mongoose');
 const yogaworkoutCategory = require('../models/category');
 
 const getAllCategories = async (req, res) => {
@@ -136,4 +136,44 @@ const deleteCategory = async (req, res) => {
 	}
 };
 
-module.exports = { getAllCategories, addCategory, updateCategory, deleteCategory };
+/**
+ * @api {post} /changeCategoryStatus
+ * @apiName changeCategoryStatus
+ * @apiGroup Category
+ * @apiParam {String} id Category ID
+ * @apiParam {Number} status Category Status
+ * @apiSuccess {Object} Category status changed successfully!
+ * @apiError {Object} Category not found
+ * @apiError {Object} Invalid ObjectId
+ */
+const changeCategoryStatus = async (req, res) => {
+	let categoryId = req.body.id.toString();
+	let categoryStatus = req.body.status;
+
+	console.log('req.body', req.body);
+
+	if (mongoose.Types.ObjectId.isValid(categoryId)) {
+		const updatedCategory = await yogaworkoutCategory.updateOne(
+			{ _id: categoryId },
+			{ $set: { isActive: categoryStatus } }
+		);
+		console.log('updatedCategory', updatedCategory);
+		if (!updatedCategory) {
+			return res.status(404).json({ error: 'Category not found' });
+		}
+
+		res.json(updatedCategory);
+	} else {
+		res.status(500).send({
+			message: 'Invalid ObjectId',
+		});
+	}
+};
+
+module.exports = {
+	getAllCategories,
+	addCategory,
+	updateCategory,
+	deleteCategory,
+	changeCategoryStatus,
+};

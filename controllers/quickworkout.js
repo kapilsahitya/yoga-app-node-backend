@@ -1,4 +1,4 @@
-const { mongoose } = require("mongoose");
+const { mongoose } = require('mongoose');
 const yogaworkoutQuickworkout = require('../models/quickworkout');
 
 const getAllQuickworkouts = async (req, res) => {
@@ -129,11 +129,54 @@ const deleteQuickworkout = async (req, res) => {
 			return res.status(404).json({ error: 'Quickworkout not found' });
 		}
 
-		res.json({ message: 'Quickworkout deleted successfully', deletedQuickworkout });
+		res.json({
+			message: 'Quickworkout deleted successfully',
+			deletedQuickworkout,
+		});
 	} catch (err) {
 		console.error(err);
 		res.status(500).json({ error: 'Failed to delete Quickworkout' });
 	}
 };
 
-module.exports = { getAllQuickworkouts, addQuickworkout, updateQuickworkout, deleteQuickworkout };
+/**
+ * @api {post} /changeQuickworkoutStatus
+ * @apiName changeQuickworkoutStatus
+ * @apiGroup Quickworkout
+ * @apiParam {String} id Quickworkout ID
+ * @apiParam {Number} status Quickworkout Status
+ * @apiSuccess {Object} Quickworkout status changed successfully!
+ * @apiError {Object} Quickworkout not found
+ * @apiError {Object} Invalid ObjectId
+ */
+const changeQuickworkoutStatus = async (req, res) => {
+	let quickworkoutId = req.body.id.toString();
+	let quickworkoutStatus = req.body.status;
+
+	console.log('req.body', req.body);
+
+	if (mongoose.Types.ObjectId.isValid(quickworkoutId)) {
+		const updatedQuickworkout = await yogaworkoutQuickworkout.updateOne(
+			{ _id: quickworkoutId },
+			{ $set: { isActive: quickworkoutStatus } }
+		);
+		console.log('updatedQuickworkout', updatedQuickworkout);
+		if (!updatedQuickworkout) {
+			return res.status(404).json({ error: 'Quickworkout not found' });
+		}
+
+		res.json(updatedQuickworkout);
+	} else {
+		res.status(500).send({
+			message: 'Invalid ObjectId',
+		});
+	}
+};
+
+module.exports = {
+	getAllQuickworkouts,
+	addQuickworkout,
+	updateQuickworkout,
+	deleteQuickworkout,
+	changeQuickworkoutStatus,
+};

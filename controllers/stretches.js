@@ -1,4 +1,4 @@
-const { mongoose } = require("mongoose");
+const { mongoose } = require('mongoose');
 const yogaworkoutStretches = require('../models/stretches');
 
 const getAllStretches = async (req, res) => {
@@ -136,4 +136,44 @@ const deleteStretches = async (req, res) => {
 	}
 };
 
-module.exports = { getAllStretches, addStretches, updateStretches, deleteStretches };
+/**
+ * @api {post} /changeStretchesStatus
+ * @apiName changeStretchesStatus
+ * @apiGroup Stretches
+ * @apiParam {String} id Stretches ID
+ * @apiParam {Number} status Stretches Status
+ * @apiSuccess {Object} Stretches status changed successfully!
+ * @apiError {Object} Stretches not found
+ * @apiError {Object} Invalid ObjectId
+ */
+const changeStretchesStatus = async (req, res) => {
+	let stretchesId = req.body.id.toString();
+	let stretchesStatus = req.body.status;
+
+	console.log('req.body', req.body);
+
+	if (mongoose.Types.ObjectId.isValid(stretchesId)) {
+		const updatedStretches = await yogaworkoutStretches.updateOne(
+			{ _id: stretchesId },
+			{ $set: { isActive: stretchesStatus } }
+		);
+		console.log('updatedStretches', updatedStretches);
+		if (!updatedStretches) {
+			return res.status(404).json({ error: 'Stretches not found' });
+		}
+
+		res.json(updatedStretches);
+	} else {
+		res.status(500).send({
+			message: 'Invalid ObjectId',
+		});
+	}
+};
+
+module.exports = {
+	getAllStretches,
+	addStretches,
+	updateStretches,
+	deleteStretches,
+	changeStretchesStatus,
+};

@@ -1,4 +1,4 @@
-const { mongoose } = require("mongoose");
+const { mongoose } = require('mongoose');
 const yogaworkoutDiscover = require('../models/discover');
 
 const getAllDiscovers = async (req, res) => {
@@ -136,4 +136,44 @@ const deleteDiscover = async (req, res) => {
 	}
 };
 
-module.exports = { getAllDiscovers, addDiscover, updateDiscover, deleteDiscover };
+/**
+ * @api {post} /changeDiscoverStatus
+ * @apiName changeDiscoverStatus
+ * @apiGroup Discover
+ * @apiParam {String} id Discover ID
+ * @apiParam {Number} status Discover Status
+ * @apiSuccess {Object} Discover status changed successfully!
+ * @apiError {Object} Discover not found
+ * @apiError {Object} Invalid ObjectId
+ */
+const changeDiscoverStatus = async (req, res) => {
+	let discoverId = req.body.id.toString();
+	let discoverStatus = req.body.status;
+
+	console.log('req.body', req.body);
+
+	if (mongoose.Types.ObjectId.isValid(discoverId)) {
+		const updatedDiscover = await yogaworkoutDiscover.updateOne(
+			{ _id: discoverId },
+			{ $set: { isActive: discoverStatus } }
+		);
+		console.log('updatedDiscover', updatedDiscover);
+		if (!updatedDiscover) {
+			return res.status(404).json({ error: 'Discover not found' });
+		}
+
+		res.json(updatedDiscover);
+	} else {
+		res.status(500).send({
+			message: 'Invalid ObjectId',
+		});
+	}
+};
+
+module.exports = {
+	getAllDiscovers,
+	addDiscover,
+	updateDiscover,
+	deleteDiscover,
+	changeDiscoverStatus
+};

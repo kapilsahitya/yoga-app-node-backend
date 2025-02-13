@@ -15,64 +15,129 @@ router.get('/dashboard', authenticate, Dashboard);
 
 // START: category module
 router.get('/category', authenticate, categoryController.getAllCategories);
-router.post('/addcategory', authenticate, categoryController.addCategory);
+router.post('/addCategory', authenticate, categoryController.addCategory);
 router.post(
-	'/updatecategory/:id',
+	'/updateCategory/:id',
 	authenticate,
 	categoryController.updateCategory
+);
+router.post(
+	'/deleteCategory/:id',
+	authenticate,
+	categoryController.deleteCategory
+);
+router.post(
+	'/changeCategoryStatus',
+	authenticate,
+	categoryController.changeCategoryStatus
 );
 // END: category module
 
 // START: exercise module
 router.get('/exercise', authenticate, exerciseController.getAllExercise);
-router.post('/addexercise', authenticate, exerciseController.addExercise);
+router.post('/addExercise', authenticate, exerciseController.addExercise);
 router.post(
-	'/updateexercise/:id',
+	'/updateExercise/:id',
 	authenticate,
 	exerciseController.updateExercise
 );
 router.post(
-	'/deleteexercise/:id',
+	'/deleteExercise/:id',
 	authenticate,
 	exerciseController.deleteExercise
+);
+router.post(
+	'/changeExerciseStatus',
+	authenticate,
+	exerciseController.changeExerciseStatus
 );
 // END: exercise module
 
 // START: challenges module
 router.get('/challenges', authenticate, challengesController.getAllChallenges);
-router.post('/addchallenges', authenticate, challengesController.addChallenges);
-router.post('/updatechallenges/:id', authenticate, challengesController.updateChallenges);
-router.post('/deletechallenges/:id', authenticate, challengesController.deleteChallenges);
-router.post('/changeChallengesStatus', authenticate, challengesController.changeChallengesStatus);
+router.post('/addChallenges', authenticate, challengesController.addChallenges);
+router.post(
+	'/updateChallenges/:id',
+	authenticate,
+	challengesController.updateChallenges
+);
+router.post(
+	'/deleteChallenges/:id',
+	authenticate,
+	challengesController.deleteChallenges
+);
+router.post(
+	'/changeChallengesStatus',
+	authenticate,
+	challengesController.changeChallengesStatus
+);
 // END: challenges module
 
 // START: discover module
 router.get('/discover', authenticate, discoverController.getAllDiscovers);
-router.post('/adddiscover', authenticate, discoverController.addDiscover);
+router.post('/addDiscover', authenticate, discoverController.addDiscover);
 router.post(
-	'/updatediscover/:id',
+	'/updateDiscover/:id',
 	authenticate,
 	discoverController.updateDiscover
+);
+router.post(
+	'/deleteDiscover/:id',
+	authenticate,
+	discoverController.deleteDiscover
+);
+router.post(
+	'/changeDiscoverStatus',
+	authenticate,
+	discoverController.changeDiscoverStatus
 );
 // END: discover module
 
 // START: quickworkout module
-router.get('/quickworkout', authenticate, quickworkoutController.getAllQuickworkouts);
-router.post('/addquickworkout', authenticate, quickworkoutController.addQuickworkout);
+router.get(
+	'/quickworkout',
+	authenticate,
+	quickworkoutController.getAllQuickworkouts
+);
 router.post(
-	'/updatequickworkout/:id',
+	'/addQuickworkout',
+	authenticate,
+	quickworkoutController.addQuickworkout
+);
+router.post(
+	'/updateQuickworkout/:id',
 	authenticate,
 	quickworkoutController.updateQuickworkout
+);
+router.post(
+	'/deleteQuickworkout/:id',
+	authenticate,
+	quickworkoutController.deleteQuickworkout
+);
+router.post(
+	'/changeQuickworkoutStatus',
+	authenticate,
+	quickworkoutController.changeQuickworkoutStatus
 );
 // END: quickworkout module
 
 // START: stretches module
 router.get('/stretches', authenticate, stretchesController.getAllStretches);
-router.post('/addstretches', authenticate, stretchesController.addStretches);
+router.post('/addStretches', authenticate, stretchesController.addStretches);
 router.post(
-	'/updatestretches/:id',
+	'/updateStretches/:id',
 	authenticate,
 	stretchesController.updateStretches
+);
+router.post(
+	'/deleteStretches/:id',
+	authenticate,
+	stretchesController.deleteStretches
+);
+router.post(
+	'/changeStretchesStatus',
+	authenticate,
+	stretchesController.changeStretchesStatus
 );
 // END: stretches module
 
