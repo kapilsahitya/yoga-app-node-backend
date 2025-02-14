@@ -1,6 +1,13 @@
 const { mongoose } = require('mongoose');
 const yogaworkoutCategory = require('../models/category');
 
+/**
+ * @api {get} /category
+ * @apiName getAllCategories
+ * @apiGroup Category
+ * @apiSuccess {Object[]} categories Array of all categories
+ * @apiError {Object} Server Error
+ */
 const getAllCategories = async (req, res) => {
 	try {
 		let categories = await yogaworkoutCategory.find();

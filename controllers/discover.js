@@ -1,6 +1,14 @@
 const { mongoose } = require('mongoose');
 const yogaworkoutDiscover = require('../models/discover');
 
+/**
+ * @api {get} /discover
+ * @apiName getAllDiscovers
+ * @apiGroup Discover
+ * @apiSuccess {Object[]} discovers List of Discover
+ * @apiError {Object} Server Error
+ * @apiError {Object} No Discovers Added!
+ */
 const getAllDiscovers = async (req, res) => {
 	try {
 		let discovers = await yogaworkoutDiscover.find();
@@ -175,5 +183,5 @@ module.exports = {
 	addDiscover,
 	updateDiscover,
 	deleteDiscover,
-	changeDiscoverStatus
+	changeDiscoverStatus,
 };

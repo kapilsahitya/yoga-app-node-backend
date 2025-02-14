@@ -1,6 +1,13 @@
 const { mongoose } = require('mongoose');
 const yogaworkoutStretches = require('../models/stretches');
 
+/**
+ * @api {get} /stretches
+ * @apiName getAllStretches
+ * @apiGroup Stretches
+ * @apiSuccess {Object[]} Stretches List of all stretches
+ * @apiError {Object} Server Error
+ */
 const getAllStretches = async (req, res) => {
 	try {
 		let stretchess = await yogaworkoutStretches.find();

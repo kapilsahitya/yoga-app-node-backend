@@ -7,8 +7,8 @@ const challengesController = require('../../controllers/challenges');
 const discoverController = require('../../controllers/discover');
 const quickworkoutController = require('../../controllers/quickworkout');
 const stretchesController = require('../../controllers/stretches');
-const { insertWeek, getWeek, updateWeek, deleteWeek } = require('../../controllers/week');
-const { insertDays, deleteDay } = require('../../controllers/days');
+const weekController = require('../../controllers/week');
+const daysController = require('../../controllers/days');
 const router = express.Router();
 
 router.post('/login', Login);
@@ -73,15 +73,30 @@ router.post(
 	authenticate,
 	challengesController.changeChallengesStatus
 );
-
-router.post('/insertWeek', authenticate, insertWeek);
-router.get('/getweek', authenticate, getWeek);
-router.post('/updateweek/:id', authenticate, updateWeek);
-router.post('/deleteweek/:id', authenticate, deleteWeek);
-
-router.post('/insertday', authenticate, insertDays);
-router.post('/deleteday/:id', authenticate, deleteDay);
 // END: challenges module
+
+// START: week module
+router.get(
+	'/getWeeksByChallengesId/:id',
+	authenticate,
+	weekController.getWeeksByChallengesId
+);
+router.get('/getWeeks', authenticate, weekController.getAllWeeks);
+router.post('/addWeek', authenticate, weekController.addWeek);
+router.post('/updateWeek/:id', authenticate, weekController.updateWeek);
+router.post('/deleteWeek/:id', authenticate, weekController.deleteWeek);
+// END: week module
+
+// START: day module
+router.get(
+	'/getDaysByWeekId/:id',
+	authenticate,
+	daysController.getDaysByWeekId
+);
+router.post('/addDay', authenticate, daysController.addDay);
+router.post('/updateDay/:id', authenticate, daysController.updateDay);
+router.post('/deleteDay/:id', authenticate, daysController.deleteDay);
+// END: day module
 
 // START: discover module
 router.get('/discover', authenticate, discoverController.getAllDiscovers);

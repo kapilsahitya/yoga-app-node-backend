@@ -1,6 +1,14 @@
 const { mongoose } = require('mongoose');
 const yogaworkoutQuickworkout = require('../models/quickworkout');
 
+/**
+ * @api {get} /quickworkout
+ * @apiName getAllQuickworkouts
+ * @apiGroup Quickworkout
+ * @apiSuccess {Object[]} Quickworkout list
+ * @apiError {Object} No Quickworkout Added!
+ * @apiError {Object} Server Error
+ */
 const getAllQuickworkouts = async (req, res) => {
 	try {
 		let quickworkouts = await yogaworkoutQuickworkout.find();
