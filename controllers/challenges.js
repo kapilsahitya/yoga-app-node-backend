@@ -1,4 +1,4 @@
-const { mongoose, ObjectId  } = require("mongoose");
+const { mongoose, ObjectId } = require("mongoose");
 const yogaworkoutChallenges = require("../models/challenges")
 
 const getAllChallenges = async (req, res) => {
@@ -112,7 +112,7 @@ const changeChallengesStatus = async (req, res) => {
 
     if (mongoose.Types.ObjectId.isValid(challengesId)) {
 
-        const updatedChallenges = await yogaworkoutChallenges.updateOne({_id:challengesId}, { $set: { isActive: challengesStatus } });
+        const updatedChallenges = await yogaworkoutChallenges.updateOne({ _id: challengesId }, { $set: { isActive: challengesStatus } });
         console.log("updatedChallenges", updatedChallenges)
         if (!updatedChallenges) {
             return res.status(404).json({ error: 'Challenges not found' });
@@ -129,12 +129,5 @@ const changeChallengesStatus = async (req, res) => {
 
 }
 
-const insertWeek = async(req,res) => {
-    const challenges_id = req.body.challenges_id;
-    let week_name = req.body.week_name;
-
-    
-
-}
 
 module.exports = { getAllChallenges, addChallenges, updateChallenges, deleteChallenges, changeChallengesStatus };

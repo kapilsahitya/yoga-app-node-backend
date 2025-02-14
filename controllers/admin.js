@@ -23,12 +23,12 @@ const Login = async (req, res) => {
         const payload = {
             userId: AdminUser._id
         };
-       
+
         jwt.sign(
             payload,
             process.env.SECRET_KEY,
             {
-                expiresIn: 3600
+                expiresIn: (24 * 60 * 60)
             },
             (err, token) => {
                 if (err) throw err;
