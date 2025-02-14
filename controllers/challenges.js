@@ -129,4 +129,12 @@ const changeChallengesStatus = async (req, res) => {
 
 }
 
+const insertWeek = async(req,res) => {
+    const challenges_id = req.body.challenges_id;
+    let week_name = req.body.week_name;
+
+    
+
+}
+
 module.exports = { getAllChallenges, addChallenges, updateChallenges, deleteChallenges, changeChallengesStatus };

@@ -71,6 +71,8 @@ router.post(
 	authenticate,
 	challengesController.changeChallengesStatus
 );
+
+// router.post('/insertWeek', authenticate, insertWeek);
 // END: challenges module
 
 // START: discover module
