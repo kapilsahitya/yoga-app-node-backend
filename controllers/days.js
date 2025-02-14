@@ -24,7 +24,7 @@ const addDay = async (req, res) => {
 			});
 		}
 		if (!mongoose.Types.ObjectId.isValid(week_Id)) {
-			return res.status(400).json({ error: 'Invalid week ID' });
+			return res.status(400).json({ error: 'Invalid Week ID' });
 		}
 
 		const newDay = new yogaworkoutDays({
@@ -58,7 +58,7 @@ const getDaysByWeekId = async (req, res) => {
 	try {
 		const week_Id = req.params.id;
 		if (!mongoose.Types.ObjectId.isValid(week_Id)) {
-			return res.status(400).json({ error: 'Invalid week ID' });
+			return res.status(400).json({ error: 'Invalid Week ID' });
 		}
 
 		const days = await yogaworkoutDays.find({ week_Id: week_Id });

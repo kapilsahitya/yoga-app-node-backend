@@ -9,6 +9,7 @@ const quickworkoutController = require('../../controllers/quickworkout');
 const stretchesController = require('../../controllers/stretches');
 const weekController = require('../../controllers/week');
 const daysController = require('../../controllers/days');
+const challengesexerciseController = require('../../controllers/challengesexercise');
 const router = express.Router();
 
 router.post('/login', Login);
@@ -97,6 +98,24 @@ router.post('/addDay', authenticate, daysController.addDay);
 router.post('/updateDay/:id', authenticate, daysController.updateDay);
 router.post('/deleteDay/:id', authenticate, daysController.deleteDay);
 // END: day module
+
+// START: challengesexercise module
+router.get(
+	'/getExerciseByDaysId/:id',
+	authenticate,
+	challengesexerciseController.getExerciseByDaysId
+);
+router.post(
+	'/addChallengesexercises',
+	authenticate,
+	challengesexerciseController.addChallengesexercises
+);
+router.post(
+	'/deleteChallengesexercise/:id',
+	authenticate,
+	challengesexerciseController.deleteChallengesexercise
+);
+// END: challengesexercises module
 
 // START: discover module
 router.get('/discover', authenticate, discoverController.getAllDiscovers);

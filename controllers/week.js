@@ -19,7 +19,7 @@ const addWeek = async (req, res) => {
 			});
 		}
 		if (!mongoose.Types.ObjectId.isValid(challenges_id)) {
-			return res.status(400).json({ error: 'Invalid challenges ID' });
+			return res.status(400).json({ error: 'Invalid Challenges ID' });
 		}
 
 		const newWeek = new yogaworkoutWeek({
@@ -77,7 +77,7 @@ const getWeeksByChallengesId = async (req, res) => {
 	try {
 		const challengesId = req.params.id;
 		if (!mongoose.Types.ObjectId.isValid(challengesId)) {
-			return res.status(400).json({ error: 'Invalid challenges ID' });
+			return res.status(400).json({ error: 'Invalid Challenges ID' });
 		}
 
 		const weeks = await yogaworkoutWeek.find({ challenges_Id: challengesId });
@@ -160,7 +160,7 @@ const deleteWeek = async (req, res) => {
 	const weekId = req.params.id;
 
 	if (!mongoose.Types.ObjectId.isValid(weekId)) {
-		return res.status(400).json({ error: 'Invalid challenges ID' });
+		return res.status(400).json({ error: 'Invalid Week ID' });
 	}
 
 	try {
