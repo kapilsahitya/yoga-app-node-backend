@@ -13,11 +13,18 @@ const yogaworkoutWeek = require('../models/week');
 const addWeek = async (req, res) => {
 	try {
 		const challenges_id = req.body.challenges_id;
-		let weekName = req.body.weekName;
+		if (!req.body.weekName) {
+			return res.status(400).json({
+				message: 'Enter Week Name!',
+			});
+		}
+		if (!mongoose.Types.ObjectId.isValid(challenges_id)) {
+			return res.status(400).json({ error: 'Invalid challenges ID' });
+		}
 
 		const newWeek = new yogaworkoutWeek({
 			challenges_Id: challenges_id,
-			weekName: weekName,
+			weekName: req.body.weekName,
 		});
 		await newWeek.save();
 		res.status(201).json({ message: 'Week Added successfully!' });
@@ -69,6 +76,10 @@ const getAllWeeks = async (req, res) => {
 const getWeeksByChallengesId = async (req, res) => {
 	try {
 		const challengesId = req.params.id;
+		if (!mongoose.Types.ObjectId.isValid(challengesId)) {
+			return res.status(400).json({ error: 'Invalid challenges ID' });
+		}
+
 		const weeks = await yogaworkoutWeek.find({ challenges_Id: challengesId });
 		if (weeks.length === 0) {
 			return res.status(400).json({
@@ -99,10 +110,14 @@ const getWeeksByChallengesId = async (req, res) => {
  */
 const updateWeek = async (req, res) => {
 	const week_Id = req.params.id;
-	const weekName = req.body.weekName;
+	if (!req.body.weekName) {
+		return res.status(400).json({
+			message: 'Enter Week Name!',
+		});
+	}
 
 	let newWeek = {
-		weekName: weekName,
+		weekName: req.body.weekName,
 	};
 
 	if (mongoose.Types.ObjectId.isValid(week_Id)) {
