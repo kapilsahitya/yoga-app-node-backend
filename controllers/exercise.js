@@ -12,12 +12,13 @@ const getAllExercise = async (req, res) => {
 		} else {
 			const exercisesWithImages = await Promise.all(
 				exercises.map(async (item) => {
+					const updatedItem = item.toObject ? item.toObject() : item;
 					if (item.image !== '') {
 						const imageurl = await getFile(item.image); // Assuming getFile is an async function
 						// console.log("imageurl", imageurl);
-						return { ...item, image: imageurl }; // Update the image URL
+						return { ...updatedItem, image: imageurl }; // Update the image URL
 					}
-					return item; // Return the item unchanged if no image update is needed
+					return updatedItem; // Return the item unchanged if no image update is needed
 				})
 			);
 
