@@ -11,6 +11,21 @@ const weekController = require('../../controllers/week');
 const daysController = require('../../controllers/days');
 const challengesexerciseController = require('../../controllers/challengesexercise');
 const router = express.Router();
+const multer = require('multer');
+
+
+// Configure multer
+const upload = multer({
+	storage: multer.memoryStorage(),
+	limits: { fileSize: 10 * 1024 * 1024 }, // 10 MB limit
+	fileFilter: (req, file, cb) => {
+		if (file.mimetype.startsWith('image/')) {
+			cb(null, true);
+		} else {
+			cb(new Error('Unsupported file type. Only images are allowed.'), false);
+		}
+	},
+});
 
 router.post('/login', Login);
 
@@ -38,7 +53,7 @@ router.post(
 
 // START: exercise module
 router.get('/exercise', authenticate, exerciseController.getAllExercise);
-router.post('/addExercise', authenticate, exerciseController.addExercise);
+router.post('/addExercise', authenticate, upload.single('image'), exerciseController.addExercise);
 router.post(
 	'/updateExercise/:id',
 	authenticate,

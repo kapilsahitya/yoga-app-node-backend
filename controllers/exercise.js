@@ -1,17 +1,30 @@
 const { mongoose } = require('mongoose');
 const yogaworkoutExercise = require('../models/exercise');
+const { uploadFile, getFile, deleteFile } = require('../utility/s3');
 
 const getAllExercise = async (req, res) => {
 	try {
-		let exericises = await yogaworkoutExercise.find();
-		if (exericises.length === 0) {
+		let exercises = await yogaworkoutExercise.find();
+		if (exercises.length === 0) {
 			return res.status(400).json({
 				message: 'No Exericises Added!',
 			});
 		} else {
+			const exercisesWithImages = await Promise.all(
+				exercises.map(async (item) => {
+					if (item.image !== '') {
+						const imageurl = await getFile(item.image); // Assuming getFile is an async function
+						// console.log("imageurl", imageurl);
+						return { ...item, image: imageurl }; // Update the image URL
+					}
+					return item; // Return the item unchanged if no image update is needed
+				})
+			);
+
 			res.status(200).json({
-				exericises,
+				exercises: exercisesWithImages,
 			});
+			
 		}
 	} catch (e) {
 		console.error(e);
@@ -34,6 +47,16 @@ const addExercise = async (req, res) => {
 			});
 		}
 
+		let image = '';
+		if (req.file) {
+			// return res.status(400).send('No file uploaded.');
+			const imageRes = await uploadFile(req.file, 'Exercise');
+			// console.log("imageRes", imageRes) 
+			if (imageRes && imageRes.Key) {
+				image = imageRes.Key
+			}
+		}
+
 		let exerciseName = req.body.exerciseName;
 		let exerciseTime = req.body.exerciseTime;
 		let description = req.body?.description;
@@ -44,6 +67,7 @@ const addExercise = async (req, res) => {
 			exerciseTime: exerciseTime,
 			description: description,
 			isActive: isActive,
+			image: image
 		});
 		await newExercise.save();
 		res.status(201).json({ message: 'Exercise Added successfully!' });
