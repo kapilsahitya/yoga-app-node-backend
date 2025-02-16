@@ -33,7 +33,7 @@ router.get('/dashboard', authenticate, Dashboard);
 
 // START: category module
 router.get('/category', authenticate, categoryController.getAllCategories);
-router.post('/addCategory', authenticate, categoryController.addCategory);
+router.post('/addCategory', authenticate, upload.single('image'), categoryController.addCategory);
 router.post(
 	'/updateCategory/:id',
 	authenticate,
@@ -73,7 +73,7 @@ router.post(
 
 // START: challenges module
 router.get('/challenges', authenticate, challengesController.getAllChallenges);
-router.post('/addChallenges', authenticate, challengesController.addChallenges);
+router.post('/addChallenges', authenticate, upload.single('image'), challengesController.addChallenges);
 router.post(
 	'/updateChallenges/:id',
 	authenticate,
@@ -134,7 +134,7 @@ router.post(
 
 // START: discover module
 router.get('/discover', authenticate, discoverController.getAllDiscovers);
-router.post('/addDiscover', authenticate, discoverController.addDiscover);
+router.post('/addDiscover', authenticate, upload.single('image'), discoverController.addDiscover);
 router.post(
 	'/updateDiscover/:id',
 	authenticate,
@@ -161,6 +161,7 @@ router.get(
 router.post(
 	'/addQuickworkout',
 	authenticate,
+	upload.single('image'),
 	quickworkoutController.addQuickworkout
 );
 router.post(
@@ -182,7 +183,7 @@ router.post(
 
 // START: stretches module
 router.get('/stretches', authenticate, stretchesController.getAllStretches);
-router.post('/addStretches', authenticate, stretchesController.addStretches);
+router.post('/addStretches', authenticate, upload.single('image'), stretchesController.addStretches);
 router.post(
 	'/updateStretches/:id',
 	authenticate,

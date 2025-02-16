@@ -1,5 +1,6 @@
 const { mongoose, ObjectId } = require('mongoose');
 const yogaworkoutChallenges = require('../models/challenges');
+const { uploadFile, getFile, deleteFile } = require('../utility/s3');
 
 const getAllChallenges = async (req, res) => {
 	try {
@@ -9,8 +10,19 @@ const getAllChallenges = async (req, res) => {
 				message: 'No Challenges Added!',
 			});
 		} else {
+			const challengesWithImages = await Promise.all(
+				challenges.map(async (item) => {
+					const updatedItem = item.toObject ? item.toObject() : item;
+					if (item.image !== '') {
+						const imageurl = await getFile(item.image); // Assuming getFile is an async function
+						// console.log("imageurl", imageurl);
+						return { ...updatedItem, image: imageurl }; // Update the image URL
+					}
+					return updatedItem; // Return the item unchanged if no image update is needed
+				})
+			);
 			res.status(200).json({
-				challenges,
+				challenges : challengesWithImages,
 			});
 		}
 	} catch (e) {
@@ -28,6 +40,13 @@ const addChallenges = async (req, res) => {
 				message: 'Enter Challenge Name!',
 			});
 		}
+		let image = '';
+		if (req.file) {
+			const imageRes = await uploadFile(req.file, 'Challenges');
+			if (imageRes && imageRes.Key) {
+				image = imageRes.Key
+			}
+		}
 
 		let challengesName = req.body.challengesName;
 		let description = req.body?.description;
@@ -37,6 +56,7 @@ const addChallenges = async (req, res) => {
 			challengesName: challengesName,
 			description: description,
 			isActive: isActive,
+			image: image
 		});
 		await newChallenges.save();
 		res.status(201).json({ message: 'Challenge Added successfully!' });

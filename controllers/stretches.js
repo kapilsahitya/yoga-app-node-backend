@@ -1,5 +1,6 @@
 const { mongoose } = require('mongoose');
 const yogaworkoutStretches = require('../models/stretches');
+const { uploadFile, getFile, deleteFile } = require('../utility/s3');
 
 /**
  * @api {get} /stretches
@@ -16,8 +17,19 @@ const getAllStretches = async (req, res) => {
 				message: 'No Stretches Added!',
 			});
 		} else {
+			const stretchessWithImages = await Promise.all(
+				stretchess.map(async (item) => {
+					const updatedItem = item.toObject ? item.toObject() : item;
+					if (item.image !== '') {
+						const imageurl = await getFile(item.image); // Assuming getFile is an async function
+						// console.log("imageurl", imageurl);
+						return { ...updatedItem, image: imageurl }; // Update the image URL
+					}
+					return updatedItem; // Return the item unchanged if no image update is needed
+				})
+			);
 			res.status(200).json({
-				stretchess,
+				stretchess : stretchessWithImages,
 			});
 		}
 	} catch (e) {
@@ -46,6 +58,13 @@ const addStretches = async (req, res) => {
 				message: 'Enter Stretch Name!',
 			});
 		}
+		let image = '';
+		if (req.file) {
+			const imageRes = await uploadFile(req.file, 'Stretches');
+			if (imageRes && imageRes.Key) {
+				image = imageRes.Key
+			}
+		}
 
 		let stretchesName = req.body.stretchesName;
 		let description = req.body?.description;
@@ -55,6 +74,7 @@ const addStretches = async (req, res) => {
 			stretches: stretchesName,
 			description: description,
 			isActive: isActive,
+			image: image
 		});
 		await newStretches.save();
 		res.status(201).json({ message: 'Stretch Added successfully!' });

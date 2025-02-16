@@ -1,5 +1,6 @@
 const { mongoose } = require('mongoose');
 const yogaworkoutQuickworkout = require('../models/quickworkout');
+const { uploadFile, getFile, deleteFile } = require('../utility/s3');
 
 /**
  * @api {get} /quickworkout
@@ -17,8 +18,19 @@ const getAllQuickworkouts = async (req, res) => {
 				message: 'No Quickworkout Added!',
 			});
 		} else {
+			const quickworkoutsWithImages = await Promise.all(
+				quickworkouts.map(async (item) => {
+					const updatedItem = item.toObject ? item.toObject() : item;
+					if (item.image !== '') {
+						const imageurl = await getFile(item.image); // Assuming getFile is an async function
+						// console.log("imageurl", imageurl);
+						return { ...updatedItem, image: imageurl }; // Update the image URL
+					}
+					return updatedItem; // Return the item unchanged if no image update is needed
+				})
+			);
 			res.status(200).json({
-				quickworkouts,
+				quickworkouts : quickworkoutsWithImages,
 			});
 		}
 	} catch (e) {
@@ -48,6 +60,14 @@ const addQuickworkout = async (req, res) => {
 			});
 		}
 
+		let image = '';
+		if (req.file) {
+			const imageRes = await uploadFile(req.file, 'QuickWorkout');
+			if (imageRes && imageRes.Key) {
+				image = imageRes.Key
+			}
+		}
+
 		let quickworkoutName = req.body.quickworkoutName;
 		let description = req.body?.description;
 		let isActive = req.body.isActive ? req.body.isActive : 1;
@@ -56,6 +76,7 @@ const addQuickworkout = async (req, res) => {
 			quickworkout: quickworkoutName,
 			description: description,
 			isActive: isActive,
+			image: image
 		});
 		await newQuickworkout.save();
 		res.status(201).json({ message: 'Quickworkout Added successfully!' });

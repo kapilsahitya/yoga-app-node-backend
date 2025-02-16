@@ -1,5 +1,6 @@
 const { mongoose } = require('mongoose');
 const yogaworkoutDiscover = require('../models/discover');
+const { uploadFile, getFile, deleteFile } = require('../utility/s3');
 
 /**
  * @api {get} /discover
@@ -17,8 +18,19 @@ const getAllDiscovers = async (req, res) => {
 				message: 'No Discovers Added!',
 			});
 		} else {
+			const discoversWithImages = await Promise.all(
+				discovers.map(async (item) => {
+					const updatedItem = item.toObject ? item.toObject() : item;
+					if (item.image !== '') {
+						const imageurl = await getFile(item.image); // Assuming getFile is an async function
+						// console.log("imageurl", imageurl);
+						return { ...updatedItem, image: imageurl }; // Update the image URL
+					}
+					return updatedItem; // Return the item unchanged if no image update is needed
+				})
+			);
 			res.status(200).json({
-				discovers,
+				discovers : discoversWithImages,
 			});
 		}
 	} catch (e) {
@@ -47,6 +59,13 @@ const addDiscover = async (req, res) => {
 				message: 'Enter Discover Name!',
 			});
 		}
+		let image = '';
+		if (req.file) {
+			const imageRes = await uploadFile(req.file, 'Discover');
+			if (imageRes && imageRes.Key) {
+				image = imageRes.Key
+			}
+		}
 
 		let discoverName = req.body.discoverName;
 		let description = req.body?.description;
@@ -56,6 +75,7 @@ const addDiscover = async (req, res) => {
 			discover: discoverName,
 			description: description,
 			isActive: isActive,
+			image: image
 		});
 		await newDiscover.save();
 		res.status(201).json({ message: 'Discover Added successfully!' });

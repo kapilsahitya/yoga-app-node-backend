@@ -50,9 +50,7 @@ const addExercise = async (req, res) => {
 
 		let image = '';
 		if (req.file) {
-			// return res.status(400).send('No file uploaded.');
 			const imageRes = await uploadFile(req.file, 'Exercise');
-			// console.log("imageRes", imageRes) 
 			if (imageRes && imageRes.Key) {
 				image = imageRes.Key
 			}

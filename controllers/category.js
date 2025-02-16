@@ -1,5 +1,6 @@
 const { mongoose } = require('mongoose');
 const yogaworkoutCategory = require('../models/category');
+const { uploadFile, getFile, deleteFile } = require('../utility/s3');
 
 /**
  * @api {get} /category
@@ -16,8 +17,19 @@ const getAllCategories = async (req, res) => {
 				message: 'No Categories Added!',
 			});
 		} else {
+			const categoryWithImages = await Promise.all(
+				categories.map(async (item) => {
+					const updatedItem = item.toObject ? item.toObject() : item;
+					if (item.image !== '') {
+						const imageurl = await getFile(item.image); // Assuming getFile is an async function
+						// console.log("imageurl", imageurl);
+						return { ...updatedItem, image: imageurl }; // Update the image URL
+					}
+					return updatedItem; // Return the item unchanged if no image update is needed
+				})
+			);
 			res.status(200).json({
-				categories,
+				categories: categoryWithImages,
 			});
 		}
 	} catch (e) {
@@ -46,6 +58,13 @@ const addCategory = async (req, res) => {
 				message: 'Enter Category Name!',
 			});
 		}
+		let image = '';
+		if (req.file) {
+			const imageRes = await uploadFile(req.file, 'Category');
+			if (imageRes && imageRes.Key) {
+				image = imageRes.Key
+			}
+		}
 
 		let categoryName = req.body.categoryName;
 		let description = req.body?.description;
@@ -55,6 +74,7 @@ const addCategory = async (req, res) => {
 			category: categoryName,
 			description: description,
 			isActive: isActive,
+			image: image
 		});
 		await newCategory.save();
 		res.status(201).json({ message: 'Category Added successfully!' });
