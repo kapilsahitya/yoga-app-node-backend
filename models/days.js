@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const challengesSchema = new mongoose.Schema(
+const daysSchema = new mongoose.Schema(
 	{
 		week_Id: {
 			type: mongoose.Schema.Types.ObjectId,
@@ -26,4 +26,4 @@ const challengesSchema = new mongoose.Schema(
 	{ timestamps: true, collection: 'yogaworkoutDays' }
 );
 
-module.exports = mongoose.model('yogaworkoutDays', challengesSchema);
+module.exports = mongoose.model('yogaworkoutDays', daysSchema);

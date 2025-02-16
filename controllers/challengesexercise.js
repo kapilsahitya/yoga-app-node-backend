@@ -1,24 +1,62 @@
 const { mongoose, ObjectId } = require('mongoose');
 const yogaworkoutChallengesexercise = require('../models/challengesexercise');
+const yogaworkoutDays = require('../models/days');
+const yogaworkoutExercise = require('../models/exercise');
 
 const addChallengesexercises = async (req, res) => {
 	try {
-		const day_Id = req.body.day_id;
-		if (!req.body.daysName) {
-			return res.status(400).json({
-				message: 'Enter Day Name!',
-			});
-		}
-		if (!mongoose.Types.ObjectId.isValid(day_Id)) {
+		// Utility function to validate ObjectId
+		const isValidObjectId = (id) => mongoose.Types.ObjectId.isValid(id);
+		const { day_id, exercise_ids } = req.body;
+
+		if (!mongoose.Types.ObjectId.isValid(day_id)) {
 			return res.status(400).json({ error: 'Invalid Day ID' });
 		}
-
-		const newDay = new yogaworkoutDays({
-			day_Id: day_Id,
-			daysName: req.body.daysName,
+		if (!Array.isArray(exercise_ids) || exercise_ids.length === 0) {
+			return res
+				.status(400)
+				.json({ error: 'exercise_ids must be a non-empty array' });
+		}
+		if (!exercise_ids.every(isValidObjectId)) {
+			return res.status(400).json({ error: 'Invalid Exercise ID format' });
+		}
+		const exercises = await yogaworkoutExercise.find({
+			_id: { $in: exercise_ids },
 		});
-		await newDay.save();
-		res.status(201).json({ message: 'Day Added successfully!' });
+		if (exercises.length !== exercise_ids.length) {
+			return res
+				.status(400)
+				.json({ error: 'One or more Exercise IDs are invalid' });
+		}
+
+		let day = await yogaworkoutDays.findOne({ _id: day_id });
+		if (!day) {
+			return res.status(404).json({ error: 'Day not found' });
+		}
+
+		const existingRecords = await yogaworkoutChallengesexercise.find({
+			days_Id: day._id,
+			exercise_Id: { $in: exercise_ids },
+		});
+		const existingExerciseIds = existingRecords.map((record) =>
+			record.exercise_Id.toString()
+		);
+		const newExercises = exercise_ids.filter(
+			(id) => !existingExerciseIds.includes(id)
+		);
+
+		if (newExercises.length > 0) {
+			await yogaworkoutChallengesexercise.insertMany(
+				newExercises.map((exercise_id) => ({
+					days_Id: day._id,
+					exercise_Id: exercise_id,
+				}))
+			);
+		}
+
+		res.status(201).json({
+			message: 'Day and exercises added successfully',
+		});
 	} catch (e) {
 		console.error(e);
 		res.status(500).json({
@@ -43,9 +81,18 @@ const getExerciseByDaysId = async (req, res) => {
 			return res.status(400).json({ error: 'Invalid Day ID' });
 		}
 
-		const challengesexercises = await yogaworkoutChallengesexercise.find({
-			day_Id: day_Id,
-		});
+		const challengesexercises = await yogaworkoutChallengesexercise
+			.find({
+				days_Id: day_Id,
+			})
+			.populate({
+				path: 'days_Id',
+				select: '_id daysName',
+			})
+			.populate({
+				path: 'exercise_Id',
+				select: '_id exerciseName',
+			});
 		if (challengesexercises.length === 0) {
 			return res.status(400).json({
 				message: 'No Challengesexercise Added!',
