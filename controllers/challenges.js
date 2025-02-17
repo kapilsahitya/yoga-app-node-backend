@@ -4,7 +4,7 @@ const { uploadFile, getFile, deleteFile } = require('../utility/s3');
 
 const getAllChallenges = async (req, res) => {
 	try {
-		let challenges = await yogaworkoutChallenges.find();
+		let challenges = await yogaworkoutChallenges.find().sort({ createdAt: -1 });
 		if (challenges.length === 0) {
 			return res.status(400).json({
 				message: 'No Challenges Added!',

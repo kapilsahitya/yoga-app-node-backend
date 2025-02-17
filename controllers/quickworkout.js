@@ -12,7 +12,7 @@ const { uploadFile, getFile, deleteFile } = require('../utility/s3');
  */
 const getAllQuickworkouts = async (req, res) => {
 	try {
-		let quickworkouts = await yogaworkoutQuickworkout.find();
+		let quickworkouts = await yogaworkoutQuickworkout.find().sort({ createdAt: -1 });
 		if (quickworkouts.length === 0) {
 			return res.status(400).json({
 				message: 'No Quickworkout Added!',

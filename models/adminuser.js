@@ -24,11 +24,11 @@ const adminuserSchema = new mongoose.Schema(
 			type: Number,
 			default: 1,
 		},
-		adminId: {
-			type: Number,
-			required: true,
-			unique: true,
-		},
+		// adminId: {
+		// 	type: Number,
+		// 	required: true,
+		// 	unique: true,
+		// },
 		image: {
 			type: String,
 			default: '0',
