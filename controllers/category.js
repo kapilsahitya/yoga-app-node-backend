@@ -11,7 +11,7 @@ const { uploadFile, getFile, deleteFile } = require('../utility/s3');
  */
 const getAllCategories = async (req, res) => {
 	try {
-		let categories = await yogaworkoutCategory.find();
+		let categories = await yogaworkoutCategory.find().sort({ createdAt: -1 });
 		if (categories.length === 0) {
 			return res.status(400).json({
 				message: 'No Categories Added!',

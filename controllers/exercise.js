@@ -4,7 +4,7 @@ const { uploadFile, getFile, deleteFile } = require('../utility/s3');
 
 const getAllExercise = async (req, res) => {
 	try {
-		let exercises = await yogaworkoutExercise.find();
+		let exercises = await yogaworkoutExercise.find().sort({ createdAt: -1 });
 		if (exercises.length === 0) {
 			return res.status(400).json({
 				message: 'No Exericises Added!',
@@ -150,8 +150,6 @@ const deleteExercise = async (req, res) => {
 const changeExerciseStatus = async (req, res) => {
 	let exerciseId = req.body.id.toString();
 	let exerciseStatus = req.body.status;
-
-	console.log('req.body', req.body);
 
 	if (mongoose.Types.ObjectId.isValid(exerciseId)) {
 		const updatedExercise = await yogaworkoutExercise.updateOne(

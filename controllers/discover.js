@@ -12,7 +12,7 @@ const { uploadFile, getFile, deleteFile } = require('../utility/s3');
  */
 const getAllDiscovers = async (req, res) => {
 	try {
-		let discovers = await yogaworkoutDiscover.find();
+		let discovers = await yogaworkoutDiscover.find().sort({ createdAt: -1 });
 		if (discovers.length === 0) {
 			return res.status(400).json({
 				message: 'No Discovers Added!',

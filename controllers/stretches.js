@@ -11,7 +11,7 @@ const { uploadFile, getFile, deleteFile } = require('../utility/s3');
  */
 const getAllStretches = async (req, res) => {
 	try {
-		let stretchess = await yogaworkoutStretches.find();
+		let stretchess = await yogaworkoutStretches.find().sort({ createdAt: -1 });
 		if (stretchess.length === 0) {
 			return res.status(400).json({
 				message: 'No Stretches Added!',
