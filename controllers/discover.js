@@ -181,11 +181,12 @@ const changeDiscoverStatus = async (req, res) => {
 	console.log('req.body', req.body);
 
 	if (mongoose.Types.ObjectId.isValid(discoverId)) {
-		const updatedDiscover = await yogaworkoutDiscover.updateOne(
+		const updatedDiscover = await yogaworkoutDiscover.findOneAndUpdate(
 			{ _id: discoverId },
-			{ $set: { isActive: discoverStatus } }
+			{ $set: { isActive: discoverStatus } },
+			{ returnDocument: 'after' }
 		);
-		console.log('updatedDiscover', updatedDiscover);
+		// console.log('updatedDiscover', updatedDiscover);
 		if (!updatedDiscover) {
 			return res.status(404).json({ error: 'Discover not found' });
 		}

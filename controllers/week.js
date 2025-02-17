@@ -83,7 +83,7 @@ const getWeeksByChallengesId = async (req, res) => {
 		const weeks = await yogaworkoutWeek.find({ challenges_Id: challengesId });
 		if (weeks.length === 0) {
 			return res.status(400).json({
-				message: 'No Challenges Added!',
+				message: 'No Weeks Added!',
 			});
 		} else {
 			res.status(200).json({

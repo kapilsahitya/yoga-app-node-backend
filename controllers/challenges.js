@@ -136,11 +136,12 @@ const changeChallengesStatus = async (req, res) => {
 	console.log('req.body', req.body);
 
 	if (mongoose.Types.ObjectId.isValid(challengesId)) {
-		const updatedChallenges = await yogaworkoutChallenges.updateOne(
+		const updatedChallenges = await yogaworkoutChallenges.findOneAndUpdate(
 			{ _id: challengesId },
-			{ $set: { isActive: challengesStatus } }
+			{ $set: { isActive: challengesStatus } },
+			{ returnDocument: 'after' }
 		);
-		console.log('updatedChallenges', updatedChallenges);
+		// console.log('updatedChallenges', updatedChallenges);
 		if (!updatedChallenges) {
 			return res.status(404).json({ error: 'Challenges not found' });
 		}

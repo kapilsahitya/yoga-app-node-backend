@@ -180,11 +180,12 @@ const changeCategoryStatus = async (req, res) => {
 	console.log('req.body', req.body);
 
 	if (mongoose.Types.ObjectId.isValid(categoryId)) {
-		const updatedCategory = await yogaworkoutCategory.updateOne(
+		const updatedCategory = await yogaworkoutCategory.findOneAndUpdate(
 			{ _id: categoryId },
-			{ $set: { isActive: categoryStatus } }
+			{ $set: { isActive: categoryStatus } },
+			{ returnDocument: 'after' }
 		);
-		console.log('updatedCategory', updatedCategory);
+		// console.log('updatedCategory', updatedCategory);
 		if (!updatedCategory) {
 			return res.status(404).json({ error: 'Category not found' });
 		}

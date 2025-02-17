@@ -177,14 +177,15 @@ const changeStretchesStatus = async (req, res) => {
 	let stretchesId = req.body.id.toString();
 	let stretchesStatus = req.body.status;
 
-	console.log('req.body', req.body);
+	// console.log('req.body', req.body);
 
 	if (mongoose.Types.ObjectId.isValid(stretchesId)) {
-		const updatedStretches = await yogaworkoutStretches.updateOne(
+		const updatedStretches = await yogaworkoutStretches.findOneAndUpdate(
 			{ _id: stretchesId },
-			{ $set: { isActive: stretchesStatus } }
+			{ $set: { isActive: stretchesStatus } },
+			{ returnDocument: 'after' }
 		);
-		console.log('updatedStretches', updatedStretches);
+		// console.log('updatedStretches', updatedStretches);
 		if (!updatedStretches) {
 			return res.status(404).json({ error: 'Stretches not found' });
 		}

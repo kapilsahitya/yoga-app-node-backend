@@ -182,14 +182,15 @@ const changeQuickworkoutStatus = async (req, res) => {
 	let quickworkoutId = req.body.id.toString();
 	let quickworkoutStatus = req.body.status;
 
-	console.log('req.body', req.body);
+	// console.log('req.body', req.body);
 
 	if (mongoose.Types.ObjectId.isValid(quickworkoutId)) {
-		const updatedQuickworkout = await yogaworkoutQuickworkout.updateOne(
+		const updatedQuickworkout = await yogaworkoutQuickworkout.findOneAndUpdate(
 			{ _id: quickworkoutId },
-			{ $set: { isActive: quickworkoutStatus } }
+			{ $set: { isActive: quickworkoutStatus } },
+			{ returnDocument: 'after' }
 		);
-		console.log('updatedQuickworkout', updatedQuickworkout);
+		// console.log('updatedQuickworkout', updatedQuickworkout);
 		if (!updatedQuickworkout) {
 			return res.status(404).json({ error: 'Quickworkout not found' });
 		}

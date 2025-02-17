@@ -152,11 +152,12 @@ const changeExerciseStatus = async (req, res) => {
 	let exerciseStatus = req.body.status;
 
 	if (mongoose.Types.ObjectId.isValid(exerciseId)) {
-		const updatedExercise = await yogaworkoutExercise.updateOne(
+		const updatedExercise = await yogaworkoutExercise.findOneAndUpdate(
 			{ _id: exerciseId },
-			{ $set: { isActive: exerciseStatus } }
+			{ $set: { isActive: exerciseStatus } },
+			{ returnDocument: 'after' }
 		);
-		console.log('updatedExercise', updatedExercise);
+		// console.log('updatedExercise', updatedExercise);
 		if (!updatedExercise) {
 			return res.status(404).json({ error: 'Exercise not found' });
 		}
