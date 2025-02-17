@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const yogaworkoutCategoryexercise = require('./categoryexercise');
 
 const categorySchema = new mongoose.Schema(
 	{
@@ -32,5 +33,16 @@ const categorySchema = new mongoose.Schema(
 	},
 	{ timestamps: true, collection: 'yogaworkoutCategory' }
 );
+
+categorySchema.pre('deleteOne', async function (next) {
+	const categoryId = this.getQuery()._id;
+	const categoryCount = await yogaworkoutCategoryexercise.countDocuments({ category_Id: categoryId });
+
+	if (categoryCount > 0) {
+		next(new Error('Cannot delete Category because related Category Exercise exist.'));
+	} else {
+		next();
+	}
+});
 
 module.exports = mongoose.model('yogaworkoutCategory', categorySchema);

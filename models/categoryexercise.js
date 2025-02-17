@@ -1,10 +1,10 @@
 const mongoose = require('mongoose');
 
-const challengesexerciseSchema = new mongoose.Schema(
+const categoryexerciseSchema = new mongoose.Schema(
 	{
-		days_Id: {
+		category_Id: {
 			type: mongoose.Schema.Types.ObjectId,
-			ref: 'yogaworkoutDays',
+			ref: 'yogaworkoutCategory',
 			required: true,
 			index: true,
 		},
@@ -16,13 +16,13 @@ const challengesexerciseSchema = new mongoose.Schema(
 			index: true,
 		},
 
-		// daysId: {
+		// categoryId: {
 		//     type: Number,
 		//     required: true
 		// },
 
 		// exerciseId: {
-		//     type:Number,
+		//     type: Number,
 		//     required: true
 		// },
 
@@ -41,10 +41,10 @@ const challengesexerciseSchema = new mongoose.Schema(
 			default: Date.now,
 		},
 	},
-	{ timestamps: true, collection: 'yogaworkoutChallengesexercise' }
+	{ timestamps: true, collection: 'yogaworkoutCategoryexercise' }
 );
 
 module.exports = mongoose.model(
-	'yogaworkoutChallengesexercise',
-	challengesexerciseSchema
+	'yogaworkoutCategoryexercise',
+	categoryexerciseSchema
 );

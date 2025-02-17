@@ -62,7 +62,7 @@ const addCategory = async (req, res) => {
 		if (req.file) {
 			const imageRes = await uploadFile(req.file, 'Category');
 			if (imageRes && imageRes.Key) {
-				image = imageRes.Key
+				image = imageRes.Key;
 			}
 		}
 
@@ -74,7 +74,7 @@ const addCategory = async (req, res) => {
 			category: categoryName,
 			description: description,
 			isActive: isActive,
-			image: image
+			image: image,
 		});
 		await newCategory.save();
 		res.status(201).json({ message: 'Category Added successfully!' });
@@ -148,13 +148,9 @@ const deleteCategory = async (req, res) => {
 
 	try {
 		// Find the user by ID and delete
-		const deletedCategory = await yogaworkoutCategory.findByIdAndDelete(
-			categoryId
-		);
-
-		if (!deletedCategory) {
-			return res.status(404).json({ error: 'Category not found' });
-		}
+		const deletedCategory = await yogaworkoutCategory.deleteOne({
+			_id: categoryId,
+		});
 
 		res.json({ message: 'Category deleted successfully', deletedCategory });
 	} catch (err) {

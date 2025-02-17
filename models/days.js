@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const yogaworkoutChallengesexercise = require('./challengesexercise');
 
 const daysSchema = new mongoose.Schema(
 	{
@@ -25,5 +26,16 @@ const daysSchema = new mongoose.Schema(
 	},
 	{ timestamps: true, collection: 'yogaworkoutDays' }
 );
+
+daysSchema.pre('deleteOne', async function (next) {
+	const daysId = this.getQuery()._id;
+	const daysCount = await yogaworkoutChallengesexercise.countDocuments({ days_Id: daysId });
+
+	if (daysCount > 0) {
+		next(new Error('Cannot delete Day because related Challenges Exercise exist.'));
+	} else {
+		next();
+	}
+});
 
 module.exports = mongoose.model('yogaworkoutDays', daysSchema);

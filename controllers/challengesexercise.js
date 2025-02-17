@@ -2,7 +2,21 @@ const { mongoose, ObjectId } = require('mongoose');
 const yogaworkoutChallengesexercise = require('../models/challengesexercise');
 const yogaworkoutDays = require('../models/days');
 const yogaworkoutExercise = require('../models/exercise');
+const s3 = require('../utility/s3');
 
+/**
+ * @api {post} /addChallengesexercises
+ * @apiName addChallengesexercises
+ * @apiGroup Challengesexercise
+ * @apiParam {ObjectId} day_id Day ID
+ * @apiParam {ObjectId[]} exercise_ids Exercise IDs
+ * @apiSuccess {Object} Day and exercises added successfully
+ * @apiError {Object} Invalid Day ID
+ * @apiError {Object} exercise_ids must be a non-empty array
+ * @apiError {Object} Invalid Exercise ID format
+ * @apiError {Object} One or more Exercise IDs are invalid
+ * @apiError {Object} Server Error
+ */
 const addChallengesexercises = async (req, res) => {
 	try {
 		// Utility function to validate ObjectId
@@ -91,15 +105,29 @@ const getExerciseByDaysId = async (req, res) => {
 			})
 			.populate({
 				path: 'exercise_Id',
-				select: '_id exerciseName',
+				select: '_id exerciseName description image',
 			});
 		if (challengesexercises.length === 0) {
 			return res.status(400).json({
 				message: 'No Challengesexercise Added!',
 			});
 		} else {
+			const challengesexercisesWithImages = await Promise.all(
+				challengesexercises.map(async (item) => {
+					const updatedItem = item.toObject ? item.toObject() : item;
+					if (item.exercise_Id?.image !== '') {
+						const imageurl = await s3.getFile(item.exercise_Id?.image); // Assuming getFile is an async function
+						// console.log("imageurl", imageurl);
+						return {
+							...updatedItem,
+							exercise_Id: { ...updatedItem.exercise_Id, image: imageurl },
+						}; // Update the image URL
+					}
+					return updatedItem; // Return the item unchanged if no image update is needed
+				})
+			);
 			res.status(200).json({
-				challengesexercises,
+				challengesexercises: challengesexercisesWithImages,
 			});
 		}
 	} catch (e) {

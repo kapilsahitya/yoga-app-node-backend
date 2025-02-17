@@ -174,7 +174,7 @@ const deleteWeek = async (req, res) => {
 		res.json({ message: 'Week deleted successfully', deletedWeek });
 	} catch (err) {
 		console.error(err);
-		res.status(500).json({ error: err.message });
+		res.status(500).json({ error: 'Failed to delete Week' });
 	}
 };
 
