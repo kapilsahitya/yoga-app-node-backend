@@ -1,6 +1,8 @@
 const { mongoose } = require('mongoose');
 const yogaworkoutExercise = require('../models/exercise');
-const { uploadFile, getFile, deleteFile } = require('../utility/s3');
+const s3 = require('../utility/s3');
+const yogaworkoutChallengesexercise = require('../models/challengesexercise');
+const yogaworkoutCategoryexercise = require('../models/categoryexercise');
 
 const getAllExercise = async (req, res) => {
 	try {
@@ -14,7 +16,7 @@ const getAllExercise = async (req, res) => {
 				exercises.map(async (item) => {
 					const updatedItem = item.toObject ? item.toObject() : item;
 					if (item.image !== '') {
-						const imageurl = await getFile(item.image); // Assuming getFile is an async function
+						const imageurl = await s3.getFile(item.image); // Assuming getFile is an async function
 						// console.log("imageurl", imageurl);
 						return { ...updatedItem, image: imageurl }; // Update the image URL
 					}
@@ -25,7 +27,6 @@ const getAllExercise = async (req, res) => {
 			res.status(200).json({
 				exercises: exercisesWithImages,
 			});
-			
 		}
 	} catch (e) {
 		console.error(e);
@@ -50,9 +51,9 @@ const addExercise = async (req, res) => {
 
 		let image = '';
 		if (req.file) {
-			const imageRes = await uploadFile(req.file, 'Exercise');
+			const imageRes = await s3.uploadFile(req.file, 'Exercise');
 			if (imageRes && imageRes.Key) {
-				image = imageRes.Key
+				image = imageRes.Key;
 			}
 		}
 
@@ -66,7 +67,7 @@ const addExercise = async (req, res) => {
 			exerciseTime: exerciseTime,
 			description: description,
 			isActive: isActive,
-			image: image
+			image: image,
 		});
 		await newExercise.save();
 		res.status(201).json({ message: 'Exercise Added successfully!' });
@@ -121,6 +122,8 @@ const deleteExercise = async (req, res) => {
 	}
 
 	try {
+		await yogaworkoutChallengesexercise.deleteMany({ exercise_Id: exerciseId });
+		await yogaworkoutCategoryexercise.deleteMany({ exercise_Id: exerciseId });
 		// Find the user by ID and delete
 		const deletedExercise = await yogaworkoutExercise.findByIdAndDelete(
 			exerciseId

@@ -10,6 +10,7 @@ const stretchesController = require('../../controllers/stretches');
 const weekController = require('../../controllers/week');
 const daysController = require('../../controllers/days');
 const challengesexerciseController = require('../../controllers/challengesexercise');
+const categoryexerciseController = require('../../controllers/categoryexercise');
 const router = express.Router();
 const multer = require('multer');
 
@@ -28,8 +29,27 @@ const upload = multer({
 });
 
 router.post('/login', Login);
-
 router.get('/dashboard', authenticate, Dashboard);
+
+// START: exercise module
+router.get('/exercise', authenticate, exerciseController.getAllExercise);
+router.post('/addExercise', authenticate, upload.single('image'), exerciseController.addExercise);
+router.post(
+	'/updateExercise/:id',
+	authenticate,
+	exerciseController.updateExercise
+);
+router.post(
+	'/deleteExercise/:id',
+	authenticate,
+	exerciseController.deleteExercise
+);
+router.post(
+	'/changeExerciseStatus',
+	authenticate,
+	exerciseController.changeExerciseStatus
+);
+// END: exercise module
 
 // START: category module
 router.get('/category', authenticate, categoryController.getAllCategories);
@@ -51,25 +71,23 @@ router.post(
 );
 // END: category module
 
-// START: exercise module
-router.get('/exercise', authenticate, exerciseController.getAllExercise);
-router.post('/addExercise', authenticate, upload.single('image'), exerciseController.addExercise);
-router.post(
-	'/updateExercise/:id',
+// START: categoryexercise module
+router.get(
+	'/getExerciseByCategoryId/:id',
 	authenticate,
-	exerciseController.updateExercise
+	categoryexerciseController.getExerciseByCategoryId
 );
 router.post(
-	'/deleteExercise/:id',
+	'/addCategoryexercises',
 	authenticate,
-	exerciseController.deleteExercise
+	categoryexerciseController.addCategoryexercises
 );
 router.post(
-	'/changeExerciseStatus',
+	'/deleteCategoryexercise/:id',
 	authenticate,
-	exerciseController.changeExerciseStatus
+	categoryexerciseController.deleteCategoryexercise
 );
-// END: exercise module
+// END: categoryexercises module
 
 // START: challenges module
 router.get('/challenges', authenticate, challengesController.getAllChallenges);
