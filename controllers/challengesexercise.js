@@ -105,7 +105,7 @@ const getExerciseByDaysId = async (req, res) => {
 			})
 			.populate({
 				path: 'exercise_Id',
-				select: '_id exerciseName description image',
+				select: '_id exerciseName description exerciseTime image',
 			});
 		if (challengesexercises.length === 0) {
 			return res.status(400).json({
@@ -156,7 +156,6 @@ const deleteChallengesexercise = async (req, res) => {
 	}
 
 	try {
-		// Find the user by ID and delete
 		const deletedChallengesexercise =
 			await yogaworkoutChallengesexercise.deleteOne({
 				_id: challengesexerciseId,

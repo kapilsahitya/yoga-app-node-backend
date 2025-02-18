@@ -164,9 +164,9 @@ const deleteWeek = async (req, res) => {
 	}
 
 	try {
-		// Find the user by ID and delete
+		
 		const deletedWeek = await yogaworkoutWeek.deleteOne({ _id: weekId });
-		// console.log("deletedWeek", deletedWeek)
+
 		if (deletedWeek.deletedCount === 0) {
 			return res.status(404).json({ error: 'Week not found' });
 		}

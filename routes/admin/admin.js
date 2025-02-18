@@ -11,6 +11,9 @@ const weekController = require('../../controllers/week');
 const daysController = require('../../controllers/days');
 const challengesexerciseController = require('../../controllers/challengesexercise');
 const categoryexerciseController = require('../../controllers/categoryexercise');
+const discoverexerciseController = require('../../controllers/discoverexercise');
+const quickworkoutexerciseController = require('../../controllers/quickworkoutexercise');
+const stretchesexerciseController = require('../../controllers/stretchesexercise');
 const router = express.Router();
 const multer = require('multer');
 
@@ -170,6 +173,24 @@ router.post(
 );
 // END: discover module
 
+// START: discoverexercise module
+router.get(
+	'/getExerciseByDiscoverId/:id',
+	authenticate,
+	discoverexerciseController.getExerciseByDiscoverId
+);
+router.post(
+	'/addDiscoverexercises',
+	authenticate,
+	discoverexerciseController.addDiscoverexercises
+);
+router.post(
+	'/deleteDiscoverexercise/:id',
+	authenticate,
+	discoverexerciseController.deleteDiscoverexercise
+);
+// END: discoverexercise module
+
 // START: quickworkout module
 router.get(
 	'/quickworkout',
@@ -199,6 +220,25 @@ router.post(
 );
 // END: quickworkout module
 
+// START: quickworkoutexercise module
+router.get(
+	'/getExerciseByQuickworkoutId/:id',
+	authenticate,
+	quickworkoutexerciseController.getExerciseByQuickworkoutId
+);
+router.post(
+	'/addQuickworkoutexercises',
+	authenticate,
+	quickworkoutexerciseController.addQuickworkoutexercises
+);
+router.post(
+	'/deleteQuickworkoutexercise/:id',
+	authenticate,
+	quickworkoutexerciseController.deleteQuickworkoutexercise
+);
+// END: quickworkoutexercise module
+
+
 // START: stretches module
 router.get('/stretches', authenticate, stretchesController.getAllStretches);
 router.post('/addStretches', authenticate, upload.single('image'), stretchesController.addStretches);
@@ -218,5 +258,23 @@ router.post(
 	stretchesController.changeStretchesStatus
 );
 // END: stretches module
+
+// START: stretchesexercise module
+router.get(
+	'/getExerciseByStretchesId/:id',
+	authenticate,
+	stretchesexerciseController.getExerciseByStretchesId
+);
+router.post(
+	'/addStretchesexercises',
+	authenticate,
+	stretchesexerciseController.addStretchesexercises
+);
+router.post(
+	'/deleteStretchesexercise/:id',
+	authenticate,
+	stretchesexerciseController.deleteStretchesexercise
+);
+// END: stretchesexercise module
 
 module.exports = router;

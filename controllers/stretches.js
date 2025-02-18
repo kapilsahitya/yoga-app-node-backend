@@ -29,7 +29,7 @@ const getAllStretches = async (req, res) => {
 				})
 			);
 			res.status(200).json({
-				stretchess : stretchessWithImages,
+				stretchess: stretchessWithImages,
 			});
 		}
 	} catch (e) {
@@ -62,7 +62,7 @@ const addStretches = async (req, res) => {
 		if (req.file) {
 			const imageRes = await uploadFile(req.file, 'Stretches');
 			if (imageRes && imageRes.Key) {
-				image = imageRes.Key
+				image = imageRes.Key;
 			}
 		}
 
@@ -74,7 +74,7 @@ const addStretches = async (req, res) => {
 			stretches: stretchesName,
 			description: description,
 			isActive: isActive,
-			image: image
+			image: image,
 		});
 		await newStretches.save();
 		res.status(201).json({ message: 'Stretch Added successfully!' });
@@ -147,12 +147,11 @@ const deleteStretches = async (req, res) => {
 	}
 
 	try {
-		// Find the user by ID and delete
-		const deletedStretches = await yogaworkoutStretches.findByIdAndDelete(
-			stretchesId
-		);
+		const deletedStretches = await yogaworkoutStretches.deleteOne({
+			_id: stretchesId,
+		});
 
-		if (!deletedStretches) {
+		if (deletedQuickworkout.deletedCount === 0) {
 			return res.status(404).json({ error: 'Stretch not found' });
 		}
 

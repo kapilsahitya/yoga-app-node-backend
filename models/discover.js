@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const yogaworkoutDiscoverexercise = require('./discoverexercise');
 
 const discoverSchema = new mongoose.Schema(
 	{
@@ -32,5 +33,23 @@ const discoverSchema = new mongoose.Schema(
 	},
 	{ timestamps: true, collection: 'yogaworkoutDiscover' }
 );
+
+
+discoverSchema.pre('deleteOne', async function (next) {
+	const discoverId = this.getQuery()._id;
+	const discoverCount = await yogaworkoutDiscoverexercise.countDocuments({
+		discover_Id: discoverId,
+	});
+
+	if (discoverCount > 0) {
+		next(
+			new Error(
+				'Cannot delete Discover because related Discover Exercise exist.'
+			)
+		);
+	} else {
+		next();
+	}
+});
 
 module.exports = mongoose.model('yogaworkoutDiscover', discoverSchema);

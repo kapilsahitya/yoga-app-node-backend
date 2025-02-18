@@ -30,7 +30,7 @@ const getAllDiscovers = async (req, res) => {
 				})
 			);
 			res.status(200).json({
-				discovers : discoversWithImages,
+				discovers: discoversWithImages,
 			});
 		}
 	} catch (e) {
@@ -63,7 +63,7 @@ const addDiscover = async (req, res) => {
 		if (req.file) {
 			const imageRes = await uploadFile(req.file, 'Discover');
 			if (imageRes && imageRes.Key) {
-				image = imageRes.Key
+				image = imageRes.Key;
 			}
 		}
 
@@ -75,7 +75,7 @@ const addDiscover = async (req, res) => {
 			discover: discoverName,
 			description: description,
 			isActive: isActive,
-			image: image
+			image: image,
 		});
 		await newDiscover.save();
 		res.status(201).json({ message: 'Discover Added successfully!' });
@@ -148,12 +148,11 @@ const deleteDiscover = async (req, res) => {
 	}
 
 	try {
-		// Find the user by ID and delete
-		const deletedDiscover = await yogaworkoutDiscover.findByIdAndDelete(
-			discoverId
-		);
+		const deletedDiscover = await yogaworkoutDiscover.deleteOne({
+			_id: discoverId,
+		});
 
-		if (!deletedDiscover) {
+		if (deletedDiscover.deletedCount === 0) {
 			return res.status(404).json({ error: 'Discover not found' });
 		}
 
