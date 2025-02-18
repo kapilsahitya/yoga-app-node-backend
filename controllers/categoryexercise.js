@@ -156,7 +156,6 @@ const deleteCategoryexercise = async (req, res) => {
 	}
 
 	try {
-		// Find the user by ID and delete
 		const deletedCategoryexercise = await yogaworkoutCategoryexercise.deleteOne(
 			{
 				_id: categoryexerciseId,

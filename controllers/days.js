@@ -147,7 +147,6 @@ const deleteDay = async (req, res) => {
 	}
 
 	try {
-		// Find the user by ID and delete
 		const deletedDay = await yogaworkoutDays.deleteOne({ _id: dayId });
 
 		if (deletedDay.deletedCount === 0) {

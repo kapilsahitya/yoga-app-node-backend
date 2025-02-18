@@ -43,7 +43,9 @@ const addQuickworkoutexercises = async (req, res) => {
 				.json({ error: 'One or more Exercise IDs are invalid' });
 		}
 
-		let quickworkout = await yogaworkoutQuickworkout.findOne({ _id: quickworkout_id });
+		let quickworkout = await yogaworkoutQuickworkout.findOne({
+			_id: quickworkout_id,
+		});
 		if (!quickworkout) {
 			return res.status(404).json({ error: 'Quickworkout not found' });
 		}
@@ -156,12 +158,10 @@ const deleteQuickworkoutexercise = async (req, res) => {
 	}
 
 	try {
-		// Find the user by ID and delete
-		const deletedQuickworkoutexercise = await yogaworkoutQuickworkoutexercise.deleteOne(
-			{
+		const deletedQuickworkoutexercise =
+			await yogaworkoutQuickworkoutexercise.deleteOne({
 				_id: quickworkoutexerciseId,
-			}
-		);
+			});
 
 		if (deletedQuickworkoutexercise.deletedCount === 0) {
 			return res.status(404).json({ error: 'Quickworkoutexercise not found' });

@@ -130,7 +130,7 @@ const deleteExercise = async (req, res) => {
 		await yogaworkoutQuickworkoutexercise.deleteMany({
 			exercise_Id: exerciseId,
 		});
-		// Find the user by ID and delete
+
 		const deletedExercise = await yogaworkoutExercise.findByIdAndDelete(
 			exerciseId
 		);

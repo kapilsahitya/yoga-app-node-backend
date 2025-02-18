@@ -12,7 +12,9 @@ const { uploadFile, getFile, deleteFile } = require('../utility/s3');
  */
 const getAllQuickworkouts = async (req, res) => {
 	try {
-		let quickworkouts = await yogaworkoutQuickworkout.find().sort({ createdAt: -1 });
+		let quickworkouts = await yogaworkoutQuickworkout
+			.find()
+			.sort({ createdAt: -1 });
 		if (quickworkouts.length === 0) {
 			return res.status(400).json({
 				message: 'No Quickworkout Added!',
@@ -30,7 +32,7 @@ const getAllQuickworkouts = async (req, res) => {
 				})
 			);
 			res.status(200).json({
-				quickworkouts : quickworkoutsWithImages,
+				quickworkouts: quickworkoutsWithImages,
 			});
 		}
 	} catch (e) {
@@ -64,7 +66,7 @@ const addQuickworkout = async (req, res) => {
 		if (req.file) {
 			const imageRes = await uploadFile(req.file, 'QuickWorkout');
 			if (imageRes && imageRes.Key) {
-				image = imageRes.Key
+				image = imageRes.Key;
 			}
 		}
 
@@ -76,7 +78,7 @@ const addQuickworkout = async (req, res) => {
 			quickworkout: quickworkoutName,
 			description: description,
 			isActive: isActive,
-			image: image
+			image: image,
 		});
 		await newQuickworkout.save();
 		res.status(201).json({ message: 'Quickworkout Added successfully!' });
@@ -149,7 +151,6 @@ const deleteQuickworkout = async (req, res) => {
 	}
 
 	try {
-		// Find the user by ID and delete
 		const deletedQuickworkout = await yogaworkoutQuickworkout.deleteOne({
 			_id: quickworkoutId,
 		});

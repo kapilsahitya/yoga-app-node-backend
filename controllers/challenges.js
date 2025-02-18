@@ -22,7 +22,7 @@ const getAllChallenges = async (req, res) => {
 				})
 			);
 			res.status(200).json({
-				challenges : challengesWithImages,
+				challenges: challengesWithImages,
 			});
 		}
 	} catch (e) {
@@ -44,7 +44,7 @@ const addChallenges = async (req, res) => {
 		if (req.file) {
 			const imageRes = await uploadFile(req.file, 'Challenges');
 			if (imageRes && imageRes.Key) {
-				image = imageRes.Key
+				image = imageRes.Key;
 			}
 		}
 
@@ -56,7 +56,7 @@ const addChallenges = async (req, res) => {
 			challengesName: challengesName,
 			description: description,
 			isActive: isActive,
-			image: image
+			image: image,
 		});
 		await newChallenges.save();
 		res.status(201).json({ message: 'Challenge Added successfully!' });
@@ -113,7 +113,6 @@ const deleteChallenges = async (req, res) => {
 	}
 
 	try {
-		// Find the user by ID and delete
 		const deletedChallenges = await yogaworkoutChallenges.findByIdAndDelete(
 			challengesId
 		);

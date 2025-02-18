@@ -13,6 +13,7 @@ const challengesexerciseController = require('../../controllers/challengesexerci
 const categoryexerciseController = require('../../controllers/categoryexercise');
 const discoverexerciseController = require('../../controllers/discoverexercise');
 const quickworkoutexerciseController = require('../../controllers/quickworkoutexercise');
+const stretchesexerciseController = require('../../controllers/stretchesexercise');
 const router = express.Router();
 const multer = require('multer');
 
@@ -257,5 +258,23 @@ router.post(
 	stretchesController.changeStretchesStatus
 );
 // END: stretches module
+
+// START: stretchesexercise module
+router.get(
+	'/getExerciseByStretchesId/:id',
+	authenticate,
+	stretchesexerciseController.getExerciseByStretchesId
+);
+router.post(
+	'/addStretchesexercises',
+	authenticate,
+	stretchesexerciseController.addStretchesexercises
+);
+router.post(
+	'/deleteStretchesexercise/:id',
+	authenticate,
+	stretchesexerciseController.deleteStretchesexercise
+);
+// END: stretchesexercise module
 
 module.exports = router;
