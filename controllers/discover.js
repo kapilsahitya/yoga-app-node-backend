@@ -153,7 +153,7 @@ const deleteDiscover = async (req, res) => {
 			_id: discoverId,
 		});
 
-		if (!deletedDiscover) {
+		if (deletedDiscover.deletedCount === 0) {
 			return res.status(404).json({ error: 'Discover not found' });
 		}
 

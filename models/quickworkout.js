@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const yogaworkoutQuickworkoutexercise = require('./quickworkoutexercise');
 
 const quickworkoutSchema = new mongoose.Schema(
 	{
@@ -32,5 +33,21 @@ const quickworkoutSchema = new mongoose.Schema(
 	},
 	{ timestamps: true, collection: 'yogaworkoutQuickworkout' }
 );
+
+quickworkoutSchema.pre('deleteOne', async function (next) {
+	const quickworkoutId = this.getQuery()._id;
+	const quickworkoutCount = await yogaworkoutQuickworkoutexercise.countDocuments({
+		quickworkout_Id: quickworkoutId,
+	});
+	if (quickworkoutCount > 0) {
+		next(
+			new Error(
+				'Cannot delete Quickworkout because related Quickworkout Exercise exist.'
+			)
+		);
+	} else {
+		next();
+	}
+});
 
 module.exports = mongoose.model('yogaworkoutQuickworkout', quickworkoutSchema);

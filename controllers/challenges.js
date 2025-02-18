@@ -118,7 +118,7 @@ const deleteChallenges = async (req, res) => {
 			challengesId
 		);
 
-		if (!deletedChallenges) {
+		if (deletedChallenges.deletedCount === 0) {
 			return res.status(404).json({ error: 'Challenges not found' });
 		}
 

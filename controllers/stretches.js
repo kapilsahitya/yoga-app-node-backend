@@ -151,8 +151,8 @@ const deleteStretches = async (req, res) => {
 		const deletedStretches = await yogaworkoutStretches.findByIdAndDelete(
 			stretchesId
 		);
-
-		if (!deletedStretches) {
+		
+		if (deletedStretches.deletedCount === 0) {
 			return res.status(404).json({ error: 'Stretch not found' });
 		}
 

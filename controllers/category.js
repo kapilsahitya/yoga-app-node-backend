@@ -151,6 +151,10 @@ const deleteCategory = async (req, res) => {
 		const deletedCategory = await yogaworkoutCategory.deleteOne({
 			_id: categoryId,
 		});
+		
+		if (deletedCategory.deletedCount === 0) {
+			return res.status(404).json({ error: 'Category not found' });
+		}
 
 		res.json({ message: 'Category deleted successfully', deletedCategory });
 	} catch (err) {

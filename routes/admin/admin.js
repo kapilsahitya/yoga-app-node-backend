@@ -12,6 +12,7 @@ const daysController = require('../../controllers/days');
 const challengesexerciseController = require('../../controllers/challengesexercise');
 const categoryexerciseController = require('../../controllers/categoryexercise');
 const discoverexerciseController = require('../../controllers/discoverexercise');
+const quickworkoutexerciseController = require('../../controllers/quickworkoutexercise');
 const router = express.Router();
 const multer = require('multer');
 
@@ -187,7 +188,7 @@ router.post(
 	authenticate,
 	discoverexerciseController.deleteDiscoverexercise
 );
-// END: categoryexercises module
+// END: discoverexercise module
 
 // START: quickworkout module
 router.get(
@@ -217,6 +218,25 @@ router.post(
 	quickworkoutController.changeQuickworkoutStatus
 );
 // END: quickworkout module
+
+// START: quickworkoutexercise module
+router.get(
+	'/getExerciseByQuickworkoutId/:id',
+	authenticate,
+	quickworkoutexerciseController.getExerciseByQuickworkoutId
+);
+router.post(
+	'/addQuickworkoutexercises',
+	authenticate,
+	quickworkoutexerciseController.addQuickworkoutexercises
+);
+router.post(
+	'/deleteQuickworkoutexercise/:id',
+	authenticate,
+	quickworkoutexerciseController.deleteQuickworkoutexercise
+);
+// END: quickworkoutexercise module
+
 
 // START: stretches module
 router.get('/stretches', authenticate, stretchesController.getAllStretches);

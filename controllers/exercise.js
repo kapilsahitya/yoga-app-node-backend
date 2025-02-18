@@ -4,6 +4,7 @@ const s3 = require('../utility/s3');
 const yogaworkoutChallengesexercise = require('../models/challengesexercise');
 const yogaworkoutCategoryexercise = require('../models/categoryexercise');
 const yogaworkoutDiscoverexercise = require('../models/discoverexercise');
+const yogaworkoutQuickworkoutexercise = require('../models/quickworkoutexercise');
 
 const getAllExercise = async (req, res) => {
 	try {
@@ -126,12 +127,15 @@ const deleteExercise = async (req, res) => {
 		await yogaworkoutChallengesexercise.deleteMany({ exercise_Id: exerciseId });
 		await yogaworkoutCategoryexercise.deleteMany({ exercise_Id: exerciseId });
 		await yogaworkoutDiscoverexercise.deleteMany({ exercise_Id: exerciseId });
+		await yogaworkoutQuickworkoutexercise.deleteMany({
+			exercise_Id: exerciseId,
+		});
 		// Find the user by ID and delete
 		const deletedExercise = await yogaworkoutExercise.findByIdAndDelete(
 			exerciseId
 		);
 
-		if (!deletedExercise) {
+		if (deletedExercise.deletedCount === 0) {
 			return res.status(404).json({ error: 'Exercise not found' });
 		}
 

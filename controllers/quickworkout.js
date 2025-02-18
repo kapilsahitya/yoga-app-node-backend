@@ -150,11 +150,11 @@ const deleteQuickworkout = async (req, res) => {
 
 	try {
 		// Find the user by ID and delete
-		const deletedQuickworkout = await yogaworkoutQuickworkout.findByIdAndDelete(
-			quickworkoutId
-		);
+		const deletedQuickworkout = await yogaworkoutQuickworkout.deleteOne({
+			_id: quickworkoutId,
+		});
 
-		if (!deletedQuickworkout) {
+		if (deletedQuickworkout.deletedCount === 0) {
 			return res.status(404).json({ error: 'Quickworkout not found' });
 		}
 
