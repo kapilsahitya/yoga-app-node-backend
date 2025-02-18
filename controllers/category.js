@@ -138,7 +138,17 @@ const updateCategory = async (req, res) => {
 	}
 };
 
-// TODO: Add Logic for check dependency on parent-child records/models
+/**
+ * @api {delete} /deleteCategory/:id
+ * @apiName deleteCategory
+ * @apiGroup Category
+ * @apiParam {ObjectId} id Category ID
+ * @apiSuccess {String} message Category deleted successfully
+ * @apiSuccess {Object} deletedCategory Details of the deleted category
+ * @apiError {Object} InvalidId Invalid category ID
+ * @apiError {Object} CategoryNotFound Category not found
+ * @apiError {Object} ServerError Failed to delete Category
+ */
 const deleteCategory = async (req, res) => {
 	const categoryId = req.params.id;
 

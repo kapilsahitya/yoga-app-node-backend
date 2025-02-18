@@ -5,6 +5,7 @@ const yogaworkoutChallengesexercise = require('../models/challengesexercise');
 const yogaworkoutCategoryexercise = require('../models/categoryexercise');
 const yogaworkoutDiscoverexercise = require('../models/discoverexercise');
 const yogaworkoutQuickworkoutexercise = require('../models/quickworkoutexercise');
+const yogaworkoutStretchesexercise = require('../models/stretchesexercise');
 
 const getAllExercise = async (req, res) => {
 	try {
@@ -130,6 +131,7 @@ const deleteExercise = async (req, res) => {
 		await yogaworkoutQuickworkoutexercise.deleteMany({
 			exercise_Id: exerciseId,
 		});
+		await yogaworkoutStretchesexercise.deleteMany({ exercise_Id: exerciseId });
 
 		const deletedExercise = await yogaworkoutExercise.findByIdAndDelete(
 			exerciseId
