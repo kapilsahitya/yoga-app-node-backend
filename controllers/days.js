@@ -23,6 +23,8 @@ const addDay = async (req, res) => {
 				message: 'Enter Day Name!',
 			});
 		}
+
+		console.log("week_Id", week_Id)
 		if (!mongoose.Types.ObjectId.isValid(week_Id)) {
 			return res.status(400).json({ error: 'Invalid Week ID' });
 		}
