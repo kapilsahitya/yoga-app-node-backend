@@ -11,6 +11,7 @@ const weekController = require('../../controllers/week');
 const daysController = require('../../controllers/days');
 const challengesexerciseController = require('../../controllers/challengesexercise');
 const categoryexerciseController = require('../../controllers/categoryexercise');
+const discoverexerciseController = require('../../controllers/discoverexercise');
 const router = express.Router();
 const multer = require('multer');
 
@@ -169,6 +170,24 @@ router.post(
 	discoverController.changeDiscoverStatus
 );
 // END: discover module
+
+// START: discoverexercise module
+router.get(
+	'/getExerciseByDiscoverId/:id',
+	authenticate,
+	discoverexerciseController.getExerciseByDiscoverId
+);
+router.post(
+	'/addDiscoverexercises',
+	authenticate,
+	discoverexerciseController.addDiscoverexercises
+);
+router.post(
+	'/deleteDiscoverexercise/:id',
+	authenticate,
+	discoverexerciseController.deleteDiscoverexercise
+);
+// END: categoryexercises module
 
 // START: quickworkout module
 router.get(

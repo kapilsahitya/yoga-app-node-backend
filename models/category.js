@@ -36,10 +36,16 @@ const categorySchema = new mongoose.Schema(
 
 categorySchema.pre('deleteOne', async function (next) {
 	const categoryId = this.getQuery()._id;
-	const categoryCount = await yogaworkoutCategoryexercise.countDocuments({ category_Id: categoryId });
+	const categoryCount = await yogaworkoutCategoryexercise.countDocuments({
+		category_Id: categoryId,
+	});
 
 	if (categoryCount > 0) {
-		next(new Error('Cannot delete Category because related Category Exercise exist.'));
+		next(
+			new Error(
+				'Cannot delete Category because related Category Exercise exist.'
+			)
+		);
 	} else {
 		next();
 	}

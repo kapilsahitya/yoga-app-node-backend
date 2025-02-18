@@ -149,9 +149,9 @@ const deleteDiscover = async (req, res) => {
 
 	try {
 		// Find the user by ID and delete
-		const deletedDiscover = await yogaworkoutDiscover.findByIdAndDelete(
-			discoverId
-		);
+		const deletedDiscover = await yogaworkoutDiscover.deleteOne({
+			_id: discoverId,
+		});
 
 		if (!deletedDiscover) {
 			return res.status(404).json({ error: 'Discover not found' });

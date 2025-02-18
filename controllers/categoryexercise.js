@@ -43,13 +43,13 @@ const addCategoryexercises = async (req, res) => {
 				.json({ error: 'One or more Exercise IDs are invalid' });
 		}
 
-		let day = await yogaworkoutCategory.findOne({ _id: category_id });
-		if (!day) {
+		let category = await yogaworkoutCategory.findOne({ _id: category_id });
+		if (!category) {
 			return res.status(404).json({ error: 'Category not found' });
 		}
 
 		const existingRecords = await yogaworkoutCategoryexercise.find({
-			category_Id: day._id,
+			category_Id: category._id,
 			exercise_Id: { $in: exercise_ids },
 		});
 		const existingExerciseIds = existingRecords.map((record) =>
@@ -62,7 +62,7 @@ const addCategoryexercises = async (req, res) => {
 		if (newExercises.length > 0) {
 			await yogaworkoutCategoryexercise.insertMany(
 				newExercises.map((exercise_id) => ({
-					category_Id: day._id,
+					category_Id: category._id,
 					exercise_Id: exercise_id,
 				}))
 			);
@@ -90,14 +90,14 @@ const addCategoryexercises = async (req, res) => {
  */
 const getExerciseByCategoryId = async (req, res) => {
 	try {
-		const day_Id = req.params.id;
-		if (!mongoose.Types.ObjectId.isValid(day_Id)) {
+		const category_Id = req.params.id;
+		if (!mongoose.Types.ObjectId.isValid(category_Id)) {
 			return res.status(400).json({ error: 'Invalid Category ID' });
 		}
 
 		const categoryexercises = await yogaworkoutCategoryexercise
 			.find({
-				category_Id: day_Id,
+				category_Id: category_Id,
 			})
 			.populate({
 				path: 'category_Id',
