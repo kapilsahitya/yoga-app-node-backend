@@ -175,8 +175,43 @@ const deleteChallengesexercise = async (req, res) => {
 	}
 };
 
+/**
+ * @api {post} /changeChallengesexerciseStatus
+ * @apiName changeChallengesexerciseStatus
+ * @apiGroup Challengesexercise
+ * @apiParam {String} id Challengesexercise ID
+ * @apiParam {Number} status Challengesexercise Status
+ * @apiSuccess {Object} Updated Challengesexercise object
+ * @apiError {Object} Challengesexercise not found
+ * @apiError {Object} Invalid ObjectId
+ */
+const changeChallengesexerciseStatus = async (req, res) => {
+	let ChallengesexerciseStatusId = req.body.id.toString();
+	let ChallengesexerciseStatusStatus = req.body.status;
+
+	if (mongoose.Types.ObjectId.isValid(ChallengesexerciseStatusId)) {
+		const updatedChallengesexercise =
+			await yogaworkoutChallengesexercise.findOneAndUpdate(
+				{ _id: ChallengesexerciseStatusId },
+				{ $set: { isActive: ChallengesexerciseStatusStatus } },
+				{ returnDocument: 'after' }
+			);
+
+		if (!updatedChallengesexercise) {
+			return res.status(404).json({ error: 'Challengesexercise not found' });
+		}
+
+		res.json(updatedChallengesexercise);
+	} else {
+		res.status(500).send({
+			message: 'Invalid ObjectId',
+		});
+	}
+};
+
 module.exports = {
 	addChallengesexercises,
 	getExerciseByDaysId,
 	deleteChallengesexercise,
+	changeChallengesexerciseStatus,
 };

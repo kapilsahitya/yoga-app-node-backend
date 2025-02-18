@@ -17,7 +17,6 @@ const stretchesexerciseController = require('../../controllers/stretchesexercise
 const router = express.Router();
 const multer = require('multer');
 
-
 // Configure multer
 const upload = multer({
 	storage: multer.memoryStorage(),
@@ -36,7 +35,12 @@ router.get('/dashboard', authenticate, Dashboard);
 
 // START: exercise module
 router.get('/exercise', authenticate, exerciseController.getAllExercise);
-router.post('/addExercise', authenticate, upload.single('image'), exerciseController.addExercise);
+router.post(
+	'/addExercise',
+	authenticate,
+	upload.single('image'),
+	exerciseController.addExercise
+);
 router.post(
 	'/updateExercise/:id',
 	authenticate,
@@ -56,7 +60,12 @@ router.post(
 
 // START: category module
 router.get('/category', authenticate, categoryController.getAllCategories);
-router.post('/addCategory', authenticate, upload.single('image'), categoryController.addCategory);
+router.post(
+	'/addCategory',
+	authenticate,
+	upload.single('image'),
+	categoryController.addCategory
+);
 router.post(
 	'/updateCategory/:id',
 	authenticate,
@@ -90,11 +99,21 @@ router.post(
 	authenticate,
 	categoryexerciseController.deleteCategoryexercise
 );
+router.post(
+	'/changeCategoryexerciseStatus',
+	authenticate,
+	categoryexerciseController.changeCategoryexerciseStatus
+);
 // END: categoryexercises module
 
 // START: challenges module
 router.get('/challenges', authenticate, challengesController.getAllChallenges);
-router.post('/addChallenges', authenticate, upload.single('image'), challengesController.addChallenges);
+router.post(
+	'/addChallenges',
+	authenticate,
+	upload.single('image'),
+	challengesController.addChallenges
+);
 router.post(
 	'/updateChallenges/:id',
 	authenticate,
@@ -151,11 +170,21 @@ router.post(
 	authenticate,
 	challengesexerciseController.deleteChallengesexercise
 );
+router.post(
+	'/changeChallengesexerciseStatus',
+	authenticate,
+	challengesexerciseController.changeChallengesexerciseStatus
+);
 // END: challengesexercises module
 
 // START: discover module
 router.get('/discover', authenticate, discoverController.getAllDiscovers);
-router.post('/addDiscover', authenticate, upload.single('image'), discoverController.addDiscover);
+router.post(
+	'/addDiscover',
+	authenticate,
+	upload.single('image'),
+	discoverController.addDiscover
+);
 router.post(
 	'/updateDiscover/:id',
 	authenticate,
@@ -238,10 +267,14 @@ router.post(
 );
 // END: quickworkoutexercise module
 
-
 // START: stretches module
 router.get('/stretches', authenticate, stretchesController.getAllStretches);
-router.post('/addStretches', authenticate, upload.single('image'), stretchesController.addStretches);
+router.post(
+	'/addStretches',
+	authenticate,
+	upload.single('image'),
+	stretchesController.addStretches
+);
 router.post(
 	'/updateStretches/:id',
 	authenticate,
