@@ -176,7 +176,7 @@ const changeCategoryStatus = async (req, res) => {
 	let categoryId = req.body.id.toString();
 	let categoryStatus = req.body.status;
 
-	console.log('req.body', req.body);
+	// console.log('req.body', req.body);
 
 	if (mongoose.Types.ObjectId.isValid(categoryId)) {
 		const updatedCategory = await yogaworkoutCategory.findOneAndUpdate(
