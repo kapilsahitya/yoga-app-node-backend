@@ -1,5 +1,5 @@
 const express = require('express');
-const { Login, Dashboard } = require('../../controllers/admin');
+const adminController = require('../../controllers/admin');
 const { authenticate } = require('../../middlewares/auth');
 const categoryController = require('../../controllers/category');
 const exerciseController = require('../../controllers/exercise');
@@ -30,8 +30,10 @@ const upload = multer({
 	},
 });
 
-router.post('/login', Login);
-router.get('/dashboard', authenticate, Dashboard);
+router.post('/login', adminController.Login);
+router.get('/dashboard', authenticate, adminController.Dashboard);
+router.post('/logout', authenticate, adminController.Logout);
+router.post('/changePassword', authenticate, adminController.ChangePassword);
 
 // START: exercise module
 router.get('/exercise', authenticate, exerciseController.getAllExercise);
