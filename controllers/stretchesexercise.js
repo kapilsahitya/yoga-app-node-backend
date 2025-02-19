@@ -175,8 +175,43 @@ const deleteStretchesexercise = async (req, res) => {
 	}
 };
 
+/**
+ * @api {post} /changeStretchesexerciseStatus
+ * @apiName changeStretchesexerciseStatus
+ * @apiGroup Stretchesexercise
+ * @apiParam {String} id Stretchesexercise ID
+ * @apiParam {Number} status Stretchesexercise Status
+ * @apiSuccess {Object} Updated Stretchesexercise object
+ * @apiError {Object} Stretchesexercise not found
+ * @apiError {Object} Invalid ObjectId
+ */
+const changeStretchesexerciseStatus = async (req, res) => {
+	let stretchesexerciseStatusId = req.body.id.toString();
+	let stretchesexerciseStatusStatus = req.body.status;
+
+	if (mongoose.Types.ObjectId.isValid(stretchesexerciseStatusId)) {
+		const updatedStretchesexercise =
+			await yogaworkoutStretchesexercise.findOneAndUpdate(
+				{ _id: stretchesexerciseStatusId },
+				{ $set: { isActive: stretchesexerciseStatusStatus } },
+				{ returnDocument: 'after' }
+			);
+
+		if (!updatedStretchesexercise) {
+			return res.status(404).json({ error: 'Stretchesexercise not found' });
+		}
+
+		res.json(updatedStretchesexercise);
+	} else {
+		res.status(500).send({
+			message: 'Invalid ObjectId',
+		});
+	}
+};
+
 module.exports = {
 	addStretchesexercises,
 	getExerciseByStretchesId,
 	deleteStretchesexercise,
+	changeStretchesexerciseStatus,
 };

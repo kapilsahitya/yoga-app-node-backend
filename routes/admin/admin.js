@@ -218,6 +218,11 @@ router.post(
 	authenticate,
 	discoverexerciseController.deleteDiscoverexercise
 );
+router.post(
+	'/changeDiscoverexerciseStatus',
+	authenticate,
+	discoverexerciseController.changeDiscoverexerciseStatus
+);
 // END: discoverexercise module
 
 // START: quickworkout module
@@ -265,6 +270,11 @@ router.post(
 	authenticate,
 	quickworkoutexerciseController.deleteQuickworkoutexercise
 );
+router.post(
+	'/changeQuickworkoutexerciseStatus',
+	authenticate,
+	quickworkoutexerciseController.changeQuickworkoutexerciseStatus
+);
 // END: quickworkoutexercise module
 
 // START: stretches module
@@ -307,6 +317,11 @@ router.post(
 	'/deleteStretchesexercise/:id',
 	authenticate,
 	stretchesexerciseController.deleteStretchesexercise
+);
+router.post(
+	'/changeStretchesexerciseStatus',
+	authenticate,
+	stretchesexerciseController.changeStretchesexerciseStatus
 );
 // END: stretchesexercise module
 

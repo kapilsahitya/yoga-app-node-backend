@@ -177,8 +177,43 @@ const deleteQuickworkoutexercise = async (req, res) => {
 	}
 };
 
+/**
+ * @api {post} /changeQuickworkoutexerciseStatus
+ * @apiName changeQuickworkoutexerciseStatus
+ * @apiGroup Quickworkoutexercise
+ * @apiParam {String} id Quickworkoutexercise ID
+ * @apiParam {Number} status Quickworkoutexercise Status
+ * @apiSuccess {Object} Updated Quickworkoutexercise object
+ * @apiError {Object} Quickworkoutexercise not found
+ * @apiError {Object} Invalid ObjectId
+ */
+const changeQuickworkoutexerciseStatus = async (req, res) => {
+	let quickworkoutexerciseStatusId = req.body.id.toString();
+	let quickworkoutexerciseStatusStatus = req.body.status;
+
+	if (mongoose.Types.ObjectId.isValid(quickworkoutexerciseStatusId)) {
+		const updatedQuickworkoutexercise =
+			await yogaworkoutQuickworkoutexercise.findOneAndUpdate(
+				{ _id: quickworkoutexerciseStatusId },
+				{ $set: { isActive: quickworkoutexerciseStatusStatus } },
+				{ returnDocument: 'after' }
+			);
+
+		if (!updatedQuickworkoutexercise) {
+			return res.status(404).json({ error: 'Quickworkoutexercise not found' });
+		}
+
+		res.json(updatedQuickworkoutexercise);
+	} else {
+		res.status(500).send({
+			message: 'Invalid ObjectId',
+		});
+	}
+};
+
 module.exports = {
 	addQuickworkoutexercises,
 	getExerciseByQuickworkoutId,
 	deleteQuickworkoutexercise,
+	changeQuickworkoutexerciseStatus,
 };
