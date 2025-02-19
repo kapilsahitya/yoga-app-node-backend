@@ -157,15 +157,24 @@ const deleteCategory = async (req, res) => {
 	}
 
 	try {
-		const deletedCategory = await yogaworkoutCategory.deleteOne({
-			_id: categoryId,
-		});
-
-		if (deletedCategory.deletedCount === 0) {
-			return res.status(404).json({ error: 'Category not found' });
+		const documentExists = await yogaworkoutCategory.findOne({ _id: categoryId, });
+		if (documentExists) {
+			const deletedCategory = await yogaworkoutCategory.deleteOne({
+				_id: categoryId,
+			});
+			if (deletedCategory.deletedCount === 0) {
+				return res.status(404).json({ error: 'Category not found' });
+			}
+			else{
+				ImageToDelet = documentExists.image;
+				const imageRes = await deleteFile(ImageToDelet);
+				// console.log("imageRes", imageRes)
+			}
+			res.json({ message: 'Category deleted successfully', deletedCategory });
+		} else {
+			console.log('No document found to delete.');
 		}
-
-		res.json({ message: 'Category deleted successfully', deletedCategory });
+		
 	} catch (err) {
 		console.error(err);
 		res.status(500).json({ error: 'Failed to delete Category' });

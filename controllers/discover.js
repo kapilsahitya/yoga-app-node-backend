@@ -148,15 +148,27 @@ const deleteDiscover = async (req, res) => {
 	}
 
 	try {
-		const deletedDiscover = await yogaworkoutDiscover.deleteOne({
-			_id: discoverId,
-		});
+		const documentExists = await yogaworkoutDiscover.findOne({ _id: discoverId, });
+		if (documentExists) {
+			const deletedDiscover = await yogaworkoutDiscover.deleteOne({
+				_id: discoverId,
+			});
 
-		if (deletedDiscover.deletedCount === 0) {
-			return res.status(404).json({ error: 'Discover not found' });
+			if (deletedDiscover.deletedCount === 0) {
+				return res.status(404).json({ error: 'Discover not found' });
+			}
+			else {
+				ImageToDelet = documentExists.image;
+				const imageRes = await deleteFile(ImageToDelet);
+				// console.log("imageRes", imageRes)
+			}
+
+			res.json({ message: 'Discover deleted successfully', deletedDiscover });
+		}
+		else {
+			console.log('No document found to delete.');
 		}
 
-		res.json({ message: 'Discover deleted successfully', deletedDiscover });
 	} catch (err) {
 		console.error(err);
 		res.status(500).json({ error: 'Failed to delete Discover' });

@@ -125,23 +125,33 @@ const deleteExercise = async (req, res) => {
 	}
 
 	try {
-		await yogaworkoutChallengesexercise.deleteMany({ exercise_Id: exerciseId });
-		await yogaworkoutCategoryexercise.deleteMany({ exercise_Id: exerciseId });
-		await yogaworkoutDiscoverexercise.deleteMany({ exercise_Id: exerciseId });
-		await yogaworkoutQuickworkoutexercise.deleteMany({
-			exercise_Id: exerciseId,
-		});
-		await yogaworkoutStretchesexercise.deleteMany({ exercise_Id: exerciseId });
+		const documentExists = await yogaworkoutExercise.findOne({ _id: exerciseId, });
+		if (documentExists) {
+			const deletedExercise = await yogaworkoutExercise.findByIdAndDelete(
+				exerciseId
+			);
 
-		const deletedExercise = await yogaworkoutExercise.findByIdAndDelete(
-			exerciseId
-		);
-
-		if (deletedExercise.deletedCount === 0) {
-			return res.status(404).json({ error: 'Exercise not found' });
+			if (deletedExercise.deletedCount === 0) {
+				return res.status(404).json({ error: 'Exercise not found' });
+			}
+			else {
+				
+				await yogaworkoutChallengesexercise.deleteMany({ exercise_Id: exerciseId });
+				await yogaworkoutCategoryexercise.deleteMany({ exercise_Id: exerciseId });
+				await yogaworkoutDiscoverexercise.deleteMany({ exercise_Id: exerciseId });
+				await yogaworkoutQuickworkoutexercise.deleteMany({
+					exercise_Id: exerciseId,
+				});
+				await yogaworkoutStretchesexercise.deleteMany({ exercise_Id: exerciseId });
+				ImageToDelet = documentExists.image;
+				const imageRes = await deleteFile(ImageToDelet);
+				// console.log("imageRes", imageRes)
+			}
+			res.json({ message: 'Exercise deleted successfully', deletedExercise });
 		}
-
-		res.json({ message: 'Exercise deleted successfully', deletedExercise });
+		else {
+			console.log('No document found to delete.');
+		}
 	} catch (err) {
 		console.error(err);
 		res.status(500).json({ error: 'Failed to delete Exercise' });

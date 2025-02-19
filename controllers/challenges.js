@@ -113,15 +113,24 @@ const deleteChallenges = async (req, res) => {
 	}
 
 	try {
-		const deletedChallenges = await yogaworkoutChallenges.findByIdAndDelete(
-			challengesId
-		);
-
-		if (deletedChallenges.deletedCount === 0) {
-			return res.status(404).json({ error: 'Challenges not found' });
+		const documentExists = await yogaworkoutChallenges.findOne({ _id: challengesId, });
+		if (documentExists) {
+			const deletedChallenges = await yogaworkoutChallenges.findByIdAndDelete(
+				challengesId
+			);
+			if (deletedChallenges.deletedCount === 0) {
+				return res.status(404).json({ error: 'Challenges not found' });
+			}
+			else {
+				ImageToDelet = documentExists.image;
+				const imageRes = await deleteFile(ImageToDelet);
+				// console.log("imageRes", imageRes)
+			}
+			res.json({ message: 'Challenges deleted successfully', deletedChallenges });
 		}
-
-		res.json({ message: 'Challenges deleted successfully', deletedChallenges });
+		else {
+			console.log('No document found to delete.');
+		}
 	} catch (err) {
 		console.error(err);
 		res.status(500).json({ error: 'Failed to delete Challenges' });

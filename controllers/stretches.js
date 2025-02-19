@@ -147,15 +147,27 @@ const deleteStretches = async (req, res) => {
 	}
 
 	try {
-		const deletedStretches = await yogaworkoutStretches.deleteOne({
-			_id: stretchesId,
-		});
+		const documentExists = await yogaworkoutStretches.findOne({ _id: stretchesId, });
+		if (documentExists) {
+			const deletedStretches = await yogaworkoutStretches.deleteOne({
+				_id: stretchesId,
+			});
 
-		if (deletedQuickworkout.deletedCount === 0) {
-			return res.status(404).json({ error: 'Stretch not found' });
+			if (deletedQuickworkout.deletedCount === 0) {
+				return res.status(404).json({ error: 'Stretch not found' });
+			}
+			else {
+				ImageToDelet = documentExists.image;
+				const imageRes = await deleteFile(ImageToDelet);
+				// console.log("imageRes", imageRes)
+			}
+
+			res.json({ message: 'Stretch deleted successfully', deletedStretches });
+		}
+		else {
+			console.log('No document found to delete.');
 		}
 
-		res.json({ message: 'Stretch deleted successfully', deletedStretches });
 	} catch (err) {
 		console.error(err);
 		res.status(500).json({ error: 'Failed to delete Stretch' });
