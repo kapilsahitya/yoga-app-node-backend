@@ -80,7 +80,11 @@ const getWeeksByChallengesId = async (req, res) => {
 			return res.status(400).json({ error: 'Invalid Challenges ID' });
 		}
 
-		const weeks = await yogaworkoutWeek.find({ challenges_Id: challengesId });
+		const weeks = await yogaworkoutWeek.find({ challenges_Id: challengesId })
+		.populate({
+			path: 'challenges_Id',
+			select: '_id challengesName',
+		});
 		if (weeks.length === 0) {
 			return res.status(400).json({
 				message: 'No Weeks Added!',

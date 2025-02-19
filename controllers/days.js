@@ -63,7 +63,11 @@ const getDaysByWeekId = async (req, res) => {
 			return res.status(400).json({ error: 'Invalid Week ID' });
 		}
 
-		const days = await yogaworkoutDays.find({ week_Id: week_Id });
+		const days = await yogaworkoutDays.find({ week_Id: week_Id })
+		.populate({
+			path: 'week_Id',
+			select: '_id weekName',
+		});
 		if (days.length === 0) {
 			return res.status(400).json({
 				message: 'No Days Added!',
