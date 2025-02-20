@@ -172,7 +172,7 @@ const deleteCategory = async (req, res) => {
 			}
 			res.json({ message: 'Category deleted successfully', deletedCategory });
 		} else {
-			console.log('No document found to delete.');
+			res.status(500).json({ error: 'No document found to delete.' });
 		}
 		
 	} catch (err) {

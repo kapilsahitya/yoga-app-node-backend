@@ -129,7 +129,8 @@ const deleteChallenges = async (req, res) => {
 			res.json({ message: 'Challenges deleted successfully', deletedChallenges });
 		}
 		else {
-			console.log('No document found to delete.');
+			
+			res.status(500).json({ error: 'No document found to delete.' });
 		}
 	} catch (err) {
 		console.error(err);

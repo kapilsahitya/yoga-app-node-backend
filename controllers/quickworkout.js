@@ -172,7 +172,7 @@ const deleteQuickworkout = async (req, res) => {
 			});
 		}
 		else {
-			console.log('No document found to delete.');
+			res.status(500).json({ error: 'No document found to delete.' });
 		}
 
 	} catch (err) {
