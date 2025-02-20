@@ -166,9 +166,11 @@ const deleteCategory = async (req, res) => {
 				return res.status(404).json({ error: 'Category not found' });
 			}
 			else{
-				ImageToDelet = documentExists.image;
-				const imageRes = await deleteFile(ImageToDelet);
-				// console.log("imageRes", imageRes)
+				if(documentExists.image) {
+					ImageToDelet = documentExists.image;
+					const imageRes = await deleteFile(ImageToDelet);
+					// console.log("imageRes", imageRes)
+				}
 			}
 			res.json({ message: 'Category deleted successfully', deletedCategory });
 		} else {

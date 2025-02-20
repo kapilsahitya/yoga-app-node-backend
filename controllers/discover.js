@@ -158,9 +158,11 @@ const deleteDiscover = async (req, res) => {
 				return res.status(404).json({ error: 'Discover not found' });
 			}
 			else {
-				ImageToDelet = documentExists.image;
-				const imageRes = await deleteFile(ImageToDelet);
-				// console.log("imageRes", imageRes)
+				if(documentExists.image) {
+					ImageToDelet = documentExists.image;
+					const imageRes = await deleteFile(ImageToDelet);
+					// console.log("imageRes", imageRes)
+				}
 			}
 
 			res.json({ message: 'Discover deleted successfully', deletedDiscover });

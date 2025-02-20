@@ -158,15 +158,17 @@ const deleteStretches = async (req, res) => {
 				return res.status(404).json({ error: 'Stretch not found' });
 			}
 			else {
-				ImageToDelet = documentExists.image;
-				const imageRes = await deleteFile(ImageToDelet);
-				// console.log("imageRes", imageRes)
+				if(documentExists.image) {
+					ImageToDelet = documentExists.image;
+					const imageRes = await deleteFile(ImageToDelet);
+					// console.log("imageRes", imageRes)
+				}
 			}
 
 			res.json({ message: 'Stretch deleted successfully', deletedStretches });
 		}
 		else {
-			
+
 			res.status(500).json({ error: 'No document found to delete.' });
 		}
 

@@ -135,7 +135,7 @@ const deleteExercise = async (req, res) => {
 				return res.status(404).json({ error: 'Exercise not found' });
 			}
 			else {
-				
+
 				await yogaworkoutChallengesexercise.deleteMany({ exercise_Id: exerciseId });
 				await yogaworkoutCategoryexercise.deleteMany({ exercise_Id: exerciseId });
 				await yogaworkoutDiscoverexercise.deleteMany({ exercise_Id: exerciseId });
@@ -143,9 +143,11 @@ const deleteExercise = async (req, res) => {
 					exercise_Id: exerciseId,
 				});
 				await yogaworkoutStretchesexercise.deleteMany({ exercise_Id: exerciseId });
-				ImageToDelet = documentExists.image;
-				const imageRes = await deleteFile(ImageToDelet);
-				// console.log("imageRes", imageRes)
+				if (documentExists.image) {
+					ImageToDelet = documentExists.image;
+					const imageRes = await deleteFile(ImageToDelet);
+					// console.log("imageRes", imageRes)
+				}
 			}
 			res.json({ message: 'Exercise deleted successfully', deletedExercise });
 		}
