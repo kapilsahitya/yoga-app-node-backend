@@ -1,5 +1,7 @@
 const yogaworkoutUser = require('../../models/user');
+const yogaworkoutSession = require('../../models/session');
 const encryptDecrypt = require('../../utility/encryption'); // for encrypt and decrypt
+const crypto = require('crypto');
 
 const checkUserAlreadyRegister = async (userName, mobileNo) => {
 	const user = await yogaworkoutUser.find({
@@ -24,6 +26,43 @@ const checkUserBan = async (userName, is_Active) => {
 		return true;
 	}
 };
+
+const getSession = async (userId, deviceId) => {
+	try {
+		// Generate a random string (similar to PHP's random string generation)
+		const randstring = crypto.randomBytes(10).toString('hex');
+
+		// Find the existing session for the user and device
+		const existingSession = await yogaworkoutSession.findOne({
+			user_Id: userId,
+			deviceId: deviceId,
+		});
+
+		// If a session exists, delete it
+		if (existingSession) {
+			await yogaworkoutSession.deleteOne({
+				user_Id: userId,
+				deviceId: deviceId,
+			});
+		}
+
+		// Create and save the new session
+		const newSession = new yogaworkoutSession({
+			user_Id: userId,
+			session: randstring,
+			deviceId: deviceId,
+		});
+
+		await newSession.save();
+
+		// Return the generated session ID
+		return randstring;
+	} catch (err) {
+		console.error('Error in getSession:', err);
+		throw new Error('Could not create or retrieve session');
+	}
+};
+
 const register = async (req, res) => {
 	try {
 		let userDetails = req.body;
@@ -132,12 +171,13 @@ const login = async (req, res) => {
 			const isBan = await checkUserBan(user.username, 1);
 
 			if (isBan) {
-				const Loginuser = await yogaworkoutUser.findOne({
-					username: user.username,
-					password: encryptDecrypt.encrypt_decrypt('encrypt', user.password),
-					// device_id: user.device_id,
-				})
-                .select('-password -php_password');
+				const Loginuser = await yogaworkoutUser
+					.findOne({
+						username: user.username,
+						password: encryptDecrypt.encrypt_decrypt('encrypt', user.password),
+						// device_id: user.device_id,
+					})
+					.select('-password -php_password');
 
 				if (Loginuser.length === 0) {
 					res.status(500).json({
@@ -151,12 +191,13 @@ const login = async (req, res) => {
 						},
 					});
 				} else {
+					const session = await getSession(Loginuser._id, user.device_id);
 					res.status(200).json({
 						data: {
 							success: 1,
 							login: {
 								userdetail: Loginuser,
-								session: '',
+								session: session,
 								error: 'Login Successfully',
 							},
 						},
