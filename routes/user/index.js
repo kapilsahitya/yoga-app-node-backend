@@ -6,6 +6,7 @@ const challengesController = require('../../controllers/userapis/challenges');
 const discoverController = require('../../controllers/userapis/discover');
 const quickworkoutController = require('../../controllers/userapis/quickworkout');
 const stretchesController = require('../../controllers/userapis/stretches');
+const settingController = require('../../controllers/userapis/settings');
 
 // START: exercise module
 router.get('/exercise',  exerciseController.getAllExercise);
@@ -33,5 +34,10 @@ router.get(
 // START: stretches module
 router.get('/stretches',  stretchesController.getAllStretches);
 // END: stretches module
+
+
+// START: settings module
+router.get('/settings',  settingController.settings);
+// END: settings module
 
 module.exports = router;
