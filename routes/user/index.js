@@ -12,6 +12,12 @@ const dayController = require('../../controllers/userapis/days');
 const challengesExerciseController = require('../../controllers/userapis/challengesexercise');
 const homeWorkoutController = require('../../controllers/userapis/homeworkout');
 const categoryExerciseController = require('../../controllers/userapis/categoryexercise');
+const userController = require('../../controllers/userapis/user');
+
+
+//START : User Module
+router.post('/register', userController.register);
+router.post('/login', userController.login);
 
 // START: exercise module
 router.get('/exercise', exerciseController.getAllExercise);

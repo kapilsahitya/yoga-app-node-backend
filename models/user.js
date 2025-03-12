@@ -19,6 +19,7 @@ const userSchema = new mongoose.Schema(
 		mobile: {
 			type: String,
 			required: true,
+			unique: true,
 		},
 		age: {
 			type: String,
@@ -38,7 +39,7 @@ const userSchema = new mongoose.Schema(
 		},
 		image: {
 			type: String,
-			required: true,
+			// required: true,
 		},
 		address: {
 			type: String,
@@ -64,15 +65,20 @@ const userSchema = new mongoose.Schema(
 			type: String,
 			required: true,
 		},
-		firstName: {
+		first_name: {
 			type: String,
 			required: true,
 		},
-		lastName: {
+		last_name: {
 			type: String,
 			required: true,
 		},
 
+		device_id: {
+			type: Number,
+			required: true,
+			unique: true,
+		},
 		// userId: {
 		// 	type: Number,
 		// 	required: true,
