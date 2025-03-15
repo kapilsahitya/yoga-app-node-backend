@@ -63,6 +63,20 @@ const getSession = async (userId, deviceId) => {
 	}
 };
 
+const checkUserLogin = async (userId, session, deviceId) => {
+	const existingSession = await yogaworkoutSession.findOne({
+		user_Id: userId,
+		session: session,
+		deviceId: deviceId,
+	});
+	if (existingSession) {
+		return true;
+	}
+	else {
+		return false;
+	}
+};
+
 const register = async (req, res) => {
 	try {
 		let userDetails = req.body;
@@ -242,4 +256,4 @@ const login = async (req, res) => {
 	}
 };
 
-module.exports = { register, login };
+module.exports = { register, login, checkUserLogin };

@@ -1,6 +1,5 @@
 const { mongoose, ObjectId } = require('mongoose');
 const yogaworkoutWeek = require('../../models/week');
-const yogaworkoutDays = require('../../models/days');
 
 /**
  * @api {get} /getWeeks
