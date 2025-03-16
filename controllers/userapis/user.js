@@ -71,8 +71,7 @@ const checkUserLogin = async (userId, session, deviceId) => {
 	});
 	if (existingSession) {
 		return true;
-	}
-	else {
+	} else {
 		return false;
 	}
 };
@@ -80,10 +79,18 @@ const checkUserLogin = async (userId, session, deviceId) => {
 const checkAlreadyRegister = async (req, res) => {
 	try {
 		const data = req.body;
-		if (data.mobile && data.mobile != '' && data.username && data.username != '') {
+		if (
+			data.mobile &&
+			data.mobile != '' &&
+			data.username &&
+			data.username != ''
+		) {
 			const mobile = data.mobile;
 			const username = data.username;
-			const checkalredyregister = await checkUserAlreadyRegister(username, mobile)
+			const checkalredyregister = await checkUserAlreadyRegister(
+				username,
+				mobile
+			);
 			if (checkalredyregister) {
 				res.status(200).json({
 					data: {
@@ -95,8 +102,7 @@ const checkAlreadyRegister = async (req, res) => {
 						},
 					},
 				});
-			}
-			else {
+			} else {
 				res.status(200).json({
 					data: {
 						success: 0,
@@ -108,8 +114,7 @@ const checkAlreadyRegister = async (req, res) => {
 					},
 				});
 			}
-		}
-		else {
+		} else {
 			res.status(201).json({
 				data: {
 					success: 0,
@@ -121,8 +126,7 @@ const checkAlreadyRegister = async (req, res) => {
 				},
 			});
 		}
-	}
-	catch (e) {
+	} catch (e) {
 		console.error(e);
 		res.status(500).json({
 			data: {
@@ -135,17 +139,16 @@ const checkAlreadyRegister = async (req, res) => {
 			},
 		});
 	}
-}
+};
 
 const userDetail = async (email) => {
 	const user = await yogaworkoutUser.findOne({ email: email });
 	if (user) {
-		return user
-	}
-	else {
+		return user;
+	} else {
 		return false;
 	}
-}
+};
 
 const register = async (req, res) => {
 	try {
@@ -224,10 +227,13 @@ const register = async (req, res) => {
 
 				const savedUser = await newUser.save();
 				if (savedUser) {
-					const newUserDetails = await userDetail(userDetails.email)
+					const newUserDetails = await userDetail(userDetails.email);
 					// console.log("userDetails", userDetails)
 					if (userDetails) {
-						const session = await getSession(newUserDetails._id, userDetails.device_id)
+						const session = await getSession(
+							newUserDetails._id,
+							userDetails.device_id
+						);
 						res.status(201).json({
 							success: 1,
 							login: {
@@ -236,36 +242,33 @@ const register = async (req, res) => {
 								error: 'Register Successfully',
 							},
 						});
-					}
-					else {
+					} else {
 						res.status(201).json({
 							success: 1,
 							login: {
 								userdetail: newUserDetails,
-								session: "",
+								session: '',
 								error: 'Please Try Again',
 							},
 						});
 					}
-				}
-				else {
+				} else {
 					res.status(201).json({
 						success: 0,
 						login: {
 							userdetail: [],
-							session: "",
+							session: '',
 							error: 'Please Try Again',
 						},
 					});
 				}
 			}
-		}
-		else {
+		} else {
 			res.status(201).json({
 				success: 0,
 				login: {
 					userdetail: [],
-					session: "",
+					session: '',
 					error: 'Variable not set',
 				},
 			});
@@ -276,7 +279,7 @@ const register = async (req, res) => {
 			success: 0,
 			login: {
 				userdetail: [],
-				session: "",
+				session: '',
 				error: 'Server Error',
 			},
 		});
@@ -368,4 +371,43 @@ const login = async (req, res) => {
 	}
 };
 
-module.exports = { register, login, checkUserLogin, checkAlreadyRegister };
+const forgotPassword = async (req, res) => {
+	try {
+		const userbody = req.body;
+
+		if (userbody.mobile && userbody.mobile !== '') {
+			const user = await yogaworkoutUser.findOne({
+				mobile: userbody.mobile,
+			});
+			if (user) {
+				return res.json({
+					data: {
+						success: 1,
+						forgotpassword: { error: 'Please check mobile for code' },
+					},
+				});
+			} else {
+				return res.json({
+					data: { success: 0, forgotpassword: { error: 'Please try again' } },
+				});
+			}
+		} else {
+			return res.json({
+				data: { success: 0, forgotpassword: { error: 'Variable not set' } },
+			});
+		}
+	} catch (e) {
+		console.error(e);
+		res.status(500).json({
+			data: { success: 0, forgotpassword: { error: 'Server Error' } },
+		});
+	}
+};
+
+module.exports = {
+	register,
+	login,
+	checkUserLogin,
+	checkAlreadyRegister,
+	forgotPassword,
+};

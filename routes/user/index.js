@@ -17,11 +17,11 @@ const weekCompletedController = require('../../controllers/userapis/weekcomplete
 const dayCompletedController = require('../../controllers/userapis/daycompleted');
 const workoutCompletedController = require('../../controllers/userapis/workoutcompleted');
 
-
 //START : User Module
 router.post('/register', userController.register);
 router.post('/login', userController.login);
-router.post('/checkalreadyregister',userController.checkAlreadyRegister);
+router.post('/checkalreadyregister', userController.checkAlreadyRegister);
+router.post('/forgotpassword', userController.forgotPassword);
 
 // START: exercise module
 router.get('/exercise', exerciseController.getAllExercise);
@@ -29,7 +29,10 @@ router.get('/exercise', exerciseController.getAllExercise);
 
 // START: category module
 router.get('/category', categoryController.getAllCategories);
-router.post('/categoryexercise', categoryExerciseController.getExerciseByCategoryId);
+router.post(
+	'/categoryexercise',
+	categoryExerciseController.getExerciseByCategoryId
+);
 // END: category module
 
 // START: challenges module
