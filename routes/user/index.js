@@ -16,6 +16,7 @@ const userController = require('../../controllers/userapis/user');
 const weekCompletedController = require('../../controllers/userapis/weekcompleted');
 const dayCompletedController = require('../../controllers/userapis/daycompleted');
 const workoutCompletedController = require('../../controllers/userapis/workoutcompleted');
+const planController = require('../../controllers/userapis/plan');
 
 //START : User Module
 router.post('/register', userController.register);
@@ -69,6 +70,11 @@ router.get('/settings', settingController.settings);
 // START: homeWorkout module
 // TODO: Check authentication for below
 router.post('/gethomeworkout', homeWorkoutController.getHomeWorkout);
+// END: homeWorkout module
+
+// START: homeWorkout module
+// TODO: Check authentication for below
+router.post('/plan', planController.getPlan);
 // END: homeWorkout module
 
 module.exports = router;
