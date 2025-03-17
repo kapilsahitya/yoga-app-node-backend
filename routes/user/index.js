@@ -23,6 +23,7 @@ router.post('/login', userController.login);
 router.post('/checkalreadyregister', userController.checkAlreadyRegister);
 router.post('/forgotpassword', userController.forgotPassword);
 router.post('/changepassword', userController.changePassword);
+router.post('/updatepassword', userController.updatePassword);
 
 // START: exercise module
 router.get('/exercise', exerciseController.getAllExercise);

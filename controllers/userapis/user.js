@@ -461,6 +461,86 @@ const changePassword = async (req, res) => {
 	}
 };
 
+const updatePassword = async (req, res) => {
+	try {
+		const userbody = req.body;
+
+		// Validate input
+		if (
+			!(
+				userbody.user_id &&
+				userbody.user_id !== '' &&
+				userbody.session &&
+				userbody.session !== '' &&
+				userbody.device_id &&
+				userbody.device_id !== '' &&
+				userbody.newpassword &&
+				userbody.newpassword !== '' &&
+				userbody.oldpassword &&
+				userbody.oldpassword !== ''
+			)
+		) {
+			return res.status(400).json({
+				data: { success: 0, updatepassword: { error: 'Variable Not Set' } },
+			});
+		}
+
+		const checkuserLogin = await checkUserLogin(
+			userbody.user_id,
+			userbody.session,
+			userbody.device_id
+		);
+		if (checkuserLogin) {
+			const Loginuser = await yogaworkoutUser.findOne({
+				_id: new mongoose.Types.ObjectId(userbody.user_id),
+				password: encryptDecrypt.encrypt_decrypt(
+					'encrypt',
+					userbody.oldpassword
+				),
+			});
+			if (Loginuser) {
+				// Hash the new password
+				const hashedPassword = encryptDecrypt.encrypt_decrypt(
+					'encrypt',
+					userbody.newpassword
+				);
+				// Update the password in the database
+				const result = await yogaworkoutUser.updateOne(
+					{ _id: new mongoose.Types.ObjectId(Loginuser._id) },
+					{ $set: { password: hashedPassword } },
+					{ new: true } // Return the updated document
+				);
+
+				if (result) {
+					return res.json({
+						data: {
+							success: 1,
+							updatepassword: { error: 'Change password successfully' },
+						},
+					});
+				} else {
+					return res.json({
+						data: { success: 0, updatepassword: { error: 'Please try again' } },
+					});
+				}
+			} else {
+				return res.status(400).json({
+					data: { success: 0, updatepassword: { error: 'Old password wrong' } },
+				});
+			}
+		} else {
+			res.status(201).json({
+				data: { success: 0, updatepassword: { error: 'Please login first' } },
+			});
+		}
+	} catch (e) {
+		console.error(e);
+		res.status(500).json({
+			data: { success: 0, updatepassword: { error: 'Server Error' } },
+		});
+	}
+};
+
 module.exports = {
 	register,
 	login,
@@ -468,4 +548,5 @@ module.exports = {
 	checkAlreadyRegister,
 	forgotPassword,
 	changePassword,
+	updatePassword,
 };
