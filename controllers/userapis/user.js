@@ -1,3 +1,4 @@
+const { mongoose, ObjectId } = require('mongoose');
 const yogaworkoutUser = require('../../models/user');
 const yogaworkoutSession = require('../../models/session');
 const encryptDecrypt = require('../../utility/encryption'); // for encrypt and decrypt
@@ -404,10 +405,67 @@ const forgotPassword = async (req, res) => {
 	}
 };
 
+const changePassword = async (req, res) => {
+	try {
+		const userbody = req.body;
+
+		if (
+			userbody.mobile &&
+			userbody.mobile !== '' &&
+			userbody.newpassword &&
+			userbody.newpassword !== ''
+		) {
+			const user = await yogaworkoutUser.findOne({
+				mobile: userbody.mobile,
+			});
+			if (user) {
+				// Hash the new password
+				const hashedPassword = encryptDecrypt.encrypt_decrypt(
+					'encrypt',
+					userbody.newpassword
+				);
+				// Update the password in the database
+				const result = await yogaworkoutUser.updateOne(
+					{ _id: new mongoose.Types.ObjectId(user._id) },
+					{ $set: { password: hashedPassword } },
+					{ new: true } // Return the updated document
+				);
+
+				if (result) {
+					return res.json({
+						data: {
+							success: 1,
+							updatepassword: { error: 'Password changed successfully' },
+						},
+					});
+				} else {
+					return res.json({
+						data: { success: 0, updatepassword: { error: 'Please try again' } },
+					});
+				}
+			} else {
+				return res.json({
+					data: { success: 0, updatepassword: { error: 'Please try again' } },
+				});
+			}
+		} else {
+			return res.json({
+				data: { success: 0, updatepassword: { error: 'Variable not set' } },
+			});
+		}
+	} catch (e) {
+		console.error(e);
+		res.status(500).json({
+			data: { success: 0, updatepassword: { error: 'Server Error' } },
+		});
+	}
+};
+
 module.exports = {
 	register,
 	login,
 	checkUserLogin,
 	checkAlreadyRegister,
 	forgotPassword,
+	changePassword,
 };
