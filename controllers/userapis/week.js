@@ -1,5 +1,7 @@
 const { mongoose, ObjectId } = require('mongoose');
 const yogaworkoutWeek = require('../../models/week');
+const { checkUserLogin } = require('./user');
+const yogaworkoutDaysCompleted = require('../../models/dayscompleted');
 
 /**
  * @api {get} /getWeeks
@@ -11,7 +13,28 @@ const yogaworkoutWeek = require('../../models/week');
  */
 const getWeek = async (req, res) => {
 	try {
-		if (req.body.challenges_id) {
+		const data = req.body;
+		if (
+			data.user_id &&
+			data.user_id !== '' &&
+			data.session &&
+			data.session != '' &&
+			data.device_id &&
+			data.device_id != ''
+		) {
+			const userId = data.user_id;
+			const session = data.session;
+			const deviceId = data.device_id;
+			const checkuserLogin = await checkUserLogin(userId, session, deviceId);
+			if (!checkuserLogin) {
+				res.status(201).json({
+					data: { success: 0, days: [], error: 'Please login first' },
+				});
+			}
+		} else {
+			data.user_id = new mongoose.Types.ObjectId();
+		}
+		if (data.challenges_id) {
 			let challenges_id = req.body.challenges_id;
 			const result = await yogaworkoutWeek.aggregate([
 				{
@@ -35,8 +58,24 @@ const getWeek = async (req, res) => {
 					},
 				},
 			]);
+			let weeksWithCompletionStatus = result;
+			if (data.user_id && data.user_id !== '' && result.length) {
+				// Check if the user has completed each week
+				weeksWithCompletionStatus = await Promise.all(
+					result.map(async (week) => {
+						const weekCompleted = await yogaworkoutDaysCompleted.findOne({
+							week_id: week._id,
+							user_id: data.user_id,
+						});
+						return {
+							...week,
+							is_completed: weekCompleted ? true : false,
+						};
+					})
+				);
+			}
 			res.status(200).json({
-				data: { success: 1, week: result, error: '' },
+				data: { success: 1, week: weeksWithCompletionStatus, error: '' },
 			});
 		} else {
 			res.status(200).json({
