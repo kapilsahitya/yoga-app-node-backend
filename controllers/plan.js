@@ -43,7 +43,7 @@ const addPlan = async (req, res) => {
 			sku_id_ios: sku_id_ios
 		});
 		await newPlan.save();
-		res.status(201).json({ message: 'New Plan Added successfully!' });
+		res.status(200).json({ message: 'New Plan Added successfully!' });
 	} catch (e) {
 		console.error(e);
 		res.status(500).json({
@@ -68,7 +68,7 @@ const updatePlan = async (req, res) => {
 
 
 	let newplan = {
-		plan: planName,
+		plan_name: planName,
 		price: price,
 		months: months,
 		sku_id_android: sku_id_android,
@@ -87,8 +87,7 @@ const updatePlan = async (req, res) => {
 		if (!updatedplan) {
 			return res.status(404).json({ error: 'Plan not found' });
 		}
-
-		res.json(updatedplan);
+		return res.status(200).json({ message: 'Plan Updated Successfully', plan : updatedplan });
 	} else {
 		res.status(500).send({
 			message: 'Invalid ObjectId',
@@ -123,7 +122,7 @@ const deletePlan = async (req, res) => {
 			// 	}
 			// }
 
-			res.json({ message: 'Plan deleted successfully', deletedPlan });
+			res.status(200).json({ message: 'Plan deleted successfully', deletedPlan });
 		}
 		else {
 
