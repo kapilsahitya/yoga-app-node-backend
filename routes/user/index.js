@@ -60,7 +60,7 @@ router.get('/quickworkout', quickworkoutController.getAllQuickworkouts);
 // END: quickworkout module
 
 // START: stretches module
-router.get('/stretches', stretchesController.getAllStretches);
+router.post('/stretches', stretchesController.getAllStretches);
 // END: stretches module
 
 // START: settings module

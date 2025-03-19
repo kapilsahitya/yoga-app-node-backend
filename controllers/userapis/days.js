@@ -68,7 +68,7 @@ const getDay = async (req, res) => {
 						});
 						return {
 							...day,
-							is_completed: dayCompleted ? true : false,
+							is_completed: dayCompleted ? 1 : 0,
 						};
 					})
 				);
