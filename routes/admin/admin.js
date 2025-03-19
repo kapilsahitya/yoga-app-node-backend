@@ -358,6 +358,7 @@ router.post(
 
 // START: user module
 router.get('/user', authenticate, userController.getAllUser);
+router.post('/changeuserstatus', authenticate, userController.changeUserStatus);
 // END: user module
 
 

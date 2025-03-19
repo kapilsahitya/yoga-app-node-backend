@@ -7,6 +7,7 @@ const getAllPlans = async (req, res) => {
 		if (Plans.length === 0) {
 			return res.status(400).json({
 				message: 'No Plans Added!',
+				plan : Plans
 			});
 		} else {
 			res.status(200).json({
@@ -85,7 +86,7 @@ const updatePlan = async (req, res) => {
 			}
 		);
 		if (!updatedplan) {
-			return res.status(404).json({ error: 'Plan not found' });
+			return res.status(404).json({ message: 'Plan not found' });
 		}
 		return res.status(200).json({ message: 'Plan Updated Successfully', plan : updatedplan });
 	} else {
@@ -100,7 +101,7 @@ const deletePlan = async (req, res) => {
 	const planId = req.params.id;
 
 	if (!mongoose.Types.ObjectId.isValid(planId)) {
-		return res.status(400).json({ error: 'Invalid Plan ID' });
+		return res.status(400).json({ message: 'Invalid Plan ID' });
 	}
 
 	try {
@@ -112,7 +113,7 @@ const deletePlan = async (req, res) => {
 			});
 
 			if (deletedPlan.deletedCount === 0) {
-				return res.status(404).json({ error: 'Plan not found' });
+				return res.status(404).json({ message: 'Plan not found' });
 			}
 			// else {
 			// 	if (documentExists.image) {
@@ -126,12 +127,12 @@ const deletePlan = async (req, res) => {
 		}
 		else {
 
-			res.status(500).json({ error: 'No document found to delete.' });
+			res.status(500).json({ message: 'No document found to delete.' });
 		}
 
 	} catch (err) {
 		console.error(err);
-		res.status(500).json({ error: 'Failed to delete Plan' });
+		res.status(500).json({ message: 'Failed to delete Plan' });
 	}
 };
 
@@ -149,7 +150,7 @@ const deletePlan = async (req, res) => {
 // 		);
 // 		// console.log('updatedStretches', updatedStretches);
 // 		if (!updatedStretches) {
-// 			return res.status(404).json({ error: 'Stretches not found' });
+// 			return res.status(404).json({ message: 'Stretches not found' });
 // 		}
 
 // 		res.json(updatedStretches);
