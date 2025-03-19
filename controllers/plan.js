@@ -35,7 +35,7 @@ const addPlan = async (req, res) => {
 		let sku_id_android = req.body.sku_id_android ? req.body.sku_id_android : '';
 		let sku_id_ios = req.body.sku_id_ios ? req.body.sku_id_ios : '';
 
-		const newPlan = new yogaworkoutStretches({
+		const newPlan = new yogaworkoutPlan({
 			plan_name: planName,
 			price: price,
 			months: months,
