@@ -5,7 +5,7 @@ const getAllPlans = async (req, res) => {
 	try {
 		let Plans = await yogaworkoutPlan.find().sort({ createdAt: -1 });
 		if (Plans.length === 0) {
-			return res.status(400).json({
+			return res.status(200).json({
 				message: 'No Plans Added!',
 				plan : Plans
 			});
