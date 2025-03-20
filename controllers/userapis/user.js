@@ -316,7 +316,7 @@ const login = async (req, res) => {
 							login: {
 								userdetail: { '': '' },
 								session: '',
-								error: 'Invalid password',
+								error: 'Invalid username or password',
 							},
 						},
 					});
