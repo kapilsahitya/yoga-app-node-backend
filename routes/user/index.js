@@ -17,7 +17,7 @@ const weekCompletedController = require('../../controllers/userapis/weekcomplete
 const dayCompletedController = require('../../controllers/userapis/daycompleted');
 const workoutCompletedController = require('../../controllers/userapis/workoutcompleted');
 const planController = require('../../controllers/userapis/plan');
-const customplanController = require('../../controllers/userapis/customPlan')
+const customplanController = require('../../controllers/userapis/customPlan');
 
 //START : User Module
 router.post('/register', userController.register);
