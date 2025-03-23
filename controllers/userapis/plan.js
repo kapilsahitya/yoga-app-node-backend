@@ -2,6 +2,7 @@ const yogaworkoutPlan = require('../../models/plan');
 const { getFile } = require('../../utility/s3');
 const { checkUserLogin } = require('./user');
 const yogaworkoutPurchasePlan = require('../../models/purchaseplan');
+const moment = require('moment');
 
 const getPlan = async (req, res) => {
 	try {
@@ -40,7 +41,7 @@ const getPlan = async (req, res) => {
 			}
 		} else {
 			res.status(200).json({
-				data: { success: 1, plan: [], error: 'Variable not set' },
+				data: { success: 0, plan: [], error: 'Variable not set' },
 			});
 		}
 	} catch (e) {
@@ -104,7 +105,7 @@ const cancelPlan = async (req, res) => {
 			}
 		} else {
 			res.status(200).json({
-				data: { success: 1, purchaseplan: [], error: 'Variable not set' },
+				data: { success: 0, purchaseplan: [], error: 'Variable not set' },
 			});
 		}
 	} catch (e) {
@@ -142,25 +143,45 @@ const checkPurchasePlanDay = async (req, res) => {
 					return res.status(404).json({
 						data: {
 							success: 0,
-							purchaseplan: {},
+							checkpurchaseplanday: {},
 							error: 'Purchase plan not found',
 						},
 					});
 				}
+				// Extract the values from the document
+				const purchasePeriod = purchasePlan.total_days;
+				const purchaseDate = moment(purchasePlan.purchase_date);
+				const currentDate = moment();
+				const diffDays = currentDate.diff(purchaseDate, 'days'); // Get the difference in days
+
+				const expireDay = purchasePeriod - diffDays;
+
+				// Return expire day
+				res.status(200).json({
+					data: { success: 1, checkpurchaseplanday: expireDay, error: '' },
+				});
 			} else {
 				res.status(201).json({
-					data: { success: 0, purchaseplan: [], error: 'Please login first' },
+					data: {
+						success: 0,
+						checkpurchaseplanday: [],
+						error: 'Please login first',
+					},
 				});
 			}
 		} else {
 			res.status(200).json({
-				data: { success: 1, purchaseplan: [], error: 'Variable not set' },
+				data: {
+					success: 0,
+					checkpurchaseplanday: [],
+					error: 'Variable not set',
+				},
 			});
 		}
 	} catch (e) {
 		console.error(e);
 		res.status(500).json({
-			data: { success: 0, purchaseplan: [], error: 'Server Error' },
+			data: { success: 0, checkpurchaseplanday: [], error: 'Server Error' },
 		});
 	}
 };
