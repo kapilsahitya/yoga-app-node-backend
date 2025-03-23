@@ -83,6 +83,7 @@ router.post('/homeworkout', homeWorkoutController.homeWorkout);
 router.post('/plan', planController.getPlan);
 router.post('/cancelplan', planController.cancelPlan);
 router.post('/checkpurchaseplanday', planController.checkPurchasePlanDay);
+router.post('/addpurchaseplan', planController.addPurchasePlan);
 // END: purchaseplan module
 
 // START: customplan module

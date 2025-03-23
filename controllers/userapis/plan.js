@@ -186,4 +186,88 @@ const checkPurchasePlanDay = async (req, res) => {
 	}
 };
 
-module.exports = { getPlan, cancelPlan, checkPurchasePlanDay };
+const addPurchasePlan = async (req, res) => {
+	try {
+		const data = req.body;
+		if (
+			data.user_id &&
+			data.user_id != '' &&
+			data.session &&
+			data.session != '' &&
+			data.device_id &&
+			data.device_id != '' &&
+			data.plan_id &&
+			data.plan_id != '' &&
+			data.is_active &&
+			data.is_active != '' &&
+			data.purchase_date &&
+			data.purchase_date != ''
+		) {
+			const checkuserLogin = await checkUserLogin(
+				data.user_id,
+				data.session,
+				data.device_id
+			);
+			if (checkuserLogin) {
+				// Step 1: Fetch the plan details based on plan_id
+				const plan = await yogaworkoutPlan.findOne({ _id: data.plan_id });
+
+				if (plan) {
+					const planName = plan.plan_name;
+					const price = plan.price;
+					const months = plan.months;
+
+					// Step 2: Calculate the expiration date
+					const totalDays = months * 28; // Assuming 28 days per month
+					const purchaseMoment = moment(purchaseDate, 'DD-MM-YYYY');
+					const expireDate = purchaseMoment
+						.add(totalDays, 'days')
+						.format('DD-MM-YYYY');
+
+					// Step 3: Create and save the purchase plan document
+					const newPurchasePlan = new yogaworkoutPurchasePlan({
+						user_id: data.user_id,
+						plan_id: data.plan_id,
+						plan_name: planName,
+						price: price,
+						months: months,
+						purchase_date: purchaseMoment.toDate(),
+						expire_date: moment(expireDate, 'DD-MM-YYYY').toDate(),
+						total_days: totalDays,
+						is_payment: true,
+						created_at: new Date(),
+					});
+
+					await newPurchasePlan.save();
+
+					res.status(200).json({
+						data: {
+							success: 1,
+							purchaseplan: [],
+							error: 'Add purchase successfully',
+						},
+					});
+				} else {
+					res.status(200).json({
+						data: { success: 0, purchaseplan: [], error: 'Plan not found' },
+					});
+				}
+			} else {
+				res.status(201).json({
+					data: { success: 0, purchaseplan: [], error: 'Please login first' },
+				});
+			}
+		} else {
+			res.status(200).json({
+				data: { success: 0, purchaseplan: [], error: 'Variable not set' },
+			});
+		}
+	} catch (e) {
+		console.error(e);
+		res.status(500).json({
+			data: { success: 0, purchaseplan: [], error: 'Server Error' },
+		});
+	}
+};
+
+module.exports = { getPlan, cancelPlan, checkPurchasePlanDay, addPurchasePlan };
