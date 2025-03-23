@@ -115,4 +115,54 @@ const cancelPlan = async (req, res) => {
 	}
 };
 
-module.exports = { getPlan, cancelPlan };
+const checkPurchasePlanDay = async (req, res) => {
+	try {
+		const data = req.body;
+		if (
+			data.user_id &&
+			data.user_id != '' &&
+			data.session &&
+			data.session != '' &&
+			data.device_id &&
+			data.device_id != ''
+		) {
+			const checkuserLogin = await checkUserLogin(
+				data.user_id,
+				data.session,
+				data.device_id
+			);
+			if (checkuserLogin) {
+				// Find the most recent purchase plan for the given user
+				const purchasePlan = await yogaworkoutPurchasePlan
+					.findOne({ user_id: data.user_id })
+					.sort({ createdAt: -1 })
+					.exec();
+
+				if (!purchasePlan) {
+					return res.status(404).json({
+						data: {
+							success: 0,
+							purchaseplan: {},
+							error: 'Purchase plan not found',
+						},
+					});
+				}
+			} else {
+				res.status(201).json({
+					data: { success: 0, purchaseplan: [], error: 'Please login first' },
+				});
+			}
+		} else {
+			res.status(200).json({
+				data: { success: 1, purchaseplan: [], error: 'Variable not set' },
+			});
+		}
+	} catch (e) {
+		console.error(e);
+		res.status(500).json({
+			data: { success: 0, purchaseplan: [], error: 'Server Error' },
+		});
+	}
+};
+
+module.exports = { getPlan, cancelPlan, checkPurchasePlanDay };
