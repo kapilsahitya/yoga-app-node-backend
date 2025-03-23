@@ -165,4 +165,61 @@ const checkPurchasePlanDay = async (req, res) => {
 	}
 };
 
-module.exports = { getPlan, cancelPlan, checkPurchasePlanDay };
+const addPurchasePlan = async (req, res) => {
+	try {
+		const data = req.body;
+		if (
+			data.user_id &&
+			data.user_id != '' &&
+			data.session &&
+			data.session != '' &&
+			data.device_id &&
+			data.device_id != ''
+		) {
+			const checkuserLogin = await checkUserLogin(
+				data.user_id,
+				data.session,
+				data.device_id
+			);
+			if (checkuserLogin) {
+				if(data.plan_id && data.plan_id !='' && data.is_active && data.is_active!='' && data.purchase_date && data.purchase_date!='')
+				{
+					const packageplandetail = await yogaworkoutPlan.findById(data.plan_id);
+					if(packageplandetail)
+					{
+						const plan_name = packageplandetail.plan_name;
+						const price = packageplandetail.price;
+						const months = packageplandetail.months;
+						const total_days = months*28;
+						const days=`${total_days} days`;
+					}
+					else{
+						res.status(200).json({
+							data: { success: 0, purchaseplan: [], error: 'Invalid Plan ID' },
+						});
+					}
+				}
+				else{
+					res.status(200).json({
+						data: { success: 0, purchaseplan: [], error: 'Variable not set' },
+					});
+				}
+			} else {
+				res.status(201).json({
+					data: { success: 0, purchaseplan: [], error: 'Please login first' },
+				});
+			}
+		} else {
+			res.status(200).json({
+				data: { success: 0, purchaseplan: [], error: 'Variable not set' },
+			});
+		}
+	} catch (e) {
+		console.error(e);
+		res.status(500).json({
+			data: { success: 0, purchaseplan: [], error: 'Server Error' },
+		});
+	}
+}
+
+module.exports = { getPlan, cancelPlan, checkPurchasePlanDay, addPurchasePlan };
