@@ -102,6 +102,14 @@ router.post(
 	'/customplanexercise',
 	customplanexerciseController.customPlanExercise
 );
+router.post(
+	'/editcustomplanexercise',
+	customplanexerciseController.editCustomPlanExercise
+);
+router.post(
+	'/deletecustomplanexercise',
+	customplanexerciseController.deleteCustomPlanExercise
+)
 // END: customplanexercise module
 
 // START: workoutscompleted module

@@ -4,6 +4,58 @@ const yogaworkoutCustomPlan = require('../../models/customplan');
 const yogaworkoutCustomPlanExercise = require('../../models/customplanexercise');
 const yogaworkoutExercises = require('../../models/exercise');
 
+// Method to get exercise details
+const getExerciseDetail = async (exerciseId) => {
+	try {
+		const exerciseDetail = await yogaworkoutExercises
+			.findOne({
+				_id: exerciseId,
+			})
+			.exec();
+		return exerciseDetail;
+	} catch (err) {
+		console.error('Error fetching exercise detail:', err);
+		return null;
+	}
+};
+
+// Main function to get custom plan exercises
+const getCustomPlanExercises = async (customPlanId) => {
+	try {
+		// Fetching all custom plan exercises for a given custom_plan_id
+		const exercises = await yogaworkoutCustomPlanExercise
+			.find({
+				custom_plan_id: customPlanId,
+			})
+			.sort({ _id: 1 }) // Sorting by custom_plan_exercise_id ascending
+			.exec();
+
+		if (exercises.length > 0) {
+			const array = [];
+
+			for (const exercise of exercises) {
+				// Fetch exercise details for each exercise_id
+				const exercisedetail = await getExerciseDetail(exercise.exercise_id);
+
+				// Building the result array
+				array.push({
+					custom_plan_exercise_id: exercise.custom_plan_exercise_id,
+					custom_plan_id: exercise.custom_plan_id,
+					exercise_time: exercise.exercise_time,
+					exercisedetail: exercisedetail,
+				});
+			}
+
+			return array; // Return the result array
+		} else {
+			return false; // Return false if no exercises found
+		}
+	} catch (err) {
+		console.error('Error fetching custom plan exercises:', err);
+		return false;
+	}
+};
+
 const getCustomPlanExercise = async (req, res) => {
 	try {
 		const data = req.body;
@@ -146,56 +198,87 @@ const customPlanExercise = async (req, res) => {
 	}
 };
 
-// Method to get exercise details
-const getExerciseDetail = async (exerciseId) => {
+const editCustomPlanExercise = async (req, res) => {
 	try {
-		const exerciseDetail = await yogaworkoutExercises
-			.findOne({
-				_id: exerciseId,
-			})
-			.exec();
-		return exerciseDetail;
-	} catch (err) {
-		console.error('Error fetching exercise detail:', err);
-		return null;
-	}
-};
-
-// Main function to get custom plan exercises
-const getCustomPlanExercises = async (customPlanId) => {
-	try {
-		// Fetching all custom plan exercises for a given custom_plan_id
-		const exercises = await yogaworkoutCustomPlanExercise
-			.find({
-				custom_plan_id: customPlanId,
-			})
-			.sort({ _id: 1 }) // Sorting by custom_plan_exercise_id ascending
-			.exec();
-
-		if (exercises.length > 0) {
-			const array = [];
-
-			for (const exercise of exercises) {
-				// Fetch exercise details for each exercise_id
-				const exercisedetail = await getExerciseDetail(exercise.exercise_id);
-
-				// Building the result array
-				array.push({
-					custom_plan_exercise_id: exercise.custom_plan_exercise_id,
-					custom_plan_id: exercise.custom_plan_id,
-					exercise_time: exercise.exercise_time,
-					exercisedetail: exercisedetail,
+		const data = req.body;
+		if (
+			data.user_id &&
+			data.user_id != '' &&
+			data.session &&
+			data.session != '' &&
+			data.device_id &&
+			data.device_id != '' &&
+			data.custom_plan_id &&
+			data.custom_plan_id != '' &&
+			data.exercise_id &&
+			data.exercise_id != '' &&
+			data.exercise_time &&
+			data.exercise_time != '' &&
+			data.custom_plan_exercise_id &&
+			data.custom_plan_exercise_id != ''
+		) {
+			const checkuserLogin = await checkUserLogin(
+				data.user_id,
+				data.session,
+				data.device_id
+			);
+			if (!checkuserLogin) {
+				return res.status(201).json({
+					data: {
+						success: 0,
+						editcustomplanexercise: [],
+						error: 'Please login first',
+					},
 				});
 			}
-
-			return array; // Return the result array
-		} else {
-			return false; // Return false if no exercises found
 		}
-	} catch (err) {
-		console.error('Error fetching custom plan exercises:', err);
-		return false;
+	} catch (e) {
+		console.error(e);
+		res.status(500).json({
+			data: { success: 0, editcustomplanexercise: [], error: 'Server Error' },
+		});
 	}
 };
 
-module.exports = { getCustomPlanExercise, customPlanExercise };
+const deleteCustomPlanExercise = async (req, res) => {
+	try {
+		const data = req.body;
+		if (
+			data.user_id &&
+			data.user_id != '' &&
+			data.session &&
+			data.session != '' &&
+			data.device_id &&
+			data.device_id != '' &&
+			data.custom_plan_exercise_id &&
+			data.custom_plan_exercise_id != ''
+		) {
+			const checkuserLogin = await checkUserLogin(
+				data.user_id,
+				data.session,
+				data.device_id
+			);
+			if (!checkuserLogin) {
+				return res.status(201).json({
+					data: {
+						success: 0,
+						deletecustomplanexercise: [],
+						error: 'Please login first',
+					},
+				});
+			}
+		}
+	} catch (e) {
+		console.error(e);
+		res.status(500).json({
+			data: { success: 0, deletecustomplanexercise: [], error: 'Server Error' },
+		});
+	}
+};
+
+module.exports = {
+	getCustomPlanExercise,
+	customPlanExercise,
+	editCustomPlanExercise,
+	deleteCustomPlanExercise,
+};
