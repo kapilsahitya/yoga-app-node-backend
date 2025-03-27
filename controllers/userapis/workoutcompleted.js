@@ -96,7 +96,7 @@ const workoutCompleted = async (req, res) => {
 	}
 };
 
-const getworkoutcompleted = async (req, res) => {
+const getWorkoutCompleted = async (req, res) => {
 	try {
 		const data = req.body;
 		if (
@@ -270,5 +270,5 @@ const getChallengesDayId = async (days_id) => {
 
 module.exports = {
 	workoutCompleted,
-	getworkoutcompleted,
+	getWorkoutCompleted,
 };

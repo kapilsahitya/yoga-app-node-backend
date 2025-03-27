@@ -90,11 +90,12 @@ router.post('/addpurchaseplan', planController.addPurchasePlan);
 // START: customplan module
 router.post('/getcustomplan', customplanController.getCustomPlan);
 router.post('/customplan', customplanController.addCustomPlan);
+router.post('/getcustomplanexercise', customplanController.getCustomPlanExercise);
 // END: customplan module
 
 // START: workoutscompleted module
 router.post('/workoutcompleted', workoutCompletedController.workoutCompleted);
-router.post('/getworkoutcompleted', workoutCompletedController.getworkoutcompleted);
+router.post('/getworkoutcompleted', workoutCompletedController.getWorkoutCompleted);
 // END: workoutscompleted module
 
 module.exports = router;
