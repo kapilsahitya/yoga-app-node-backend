@@ -18,6 +18,7 @@ const dayCompletedController = require('../../controllers/userapis/daycompleted'
 const workoutCompletedController = require('../../controllers/userapis/workoutcompleted');
 const planController = require('../../controllers/userapis/plan');
 const customplanController = require('../../controllers/userapis/customPlan');
+const customplanexerciseController = require('../../controllers/userapis/customplanexercise');
 
 //START : User Module
 router.post('/register', userController.register);
@@ -90,12 +91,25 @@ router.post('/addpurchaseplan', planController.addPurchasePlan);
 // START: customplan module
 router.post('/getcustomplan', customplanController.getCustomPlan);
 router.post('/customplan', customplanController.addCustomPlan);
-router.post('/getcustomplanexercise', customplanController.getCustomPlanExercise);
 // END: customplan module
+
+// START: customplanexercise module
+router.post(
+	'/getcustomplanexercise',
+	customplanexerciseController.getCustomPlanExercise
+);
+router.post(
+	'/customplanexercise',
+	customplanexerciseController.customPlanExercise
+);
+// END: customplanexercise module
 
 // START: workoutscompleted module
 router.post('/workoutcompleted', workoutCompletedController.workoutCompleted);
-router.post('/getworkoutcompleted', workoutCompletedController.getWorkoutCompleted);
+router.post(
+	'/getworkoutcompleted',
+	workoutCompletedController.getWorkoutCompleted
+);
 // END: workoutscompleted module
 
 module.exports = router;
