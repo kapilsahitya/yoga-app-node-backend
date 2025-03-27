@@ -2,6 +2,7 @@ const { getFile } = require('../../utility/s3');
 const { checkUserLogin } = require('./user');
 const yogaworkoutCustomPlan = require('../../models/customplan');
 const yogaworkoutCustomPlanExercise = require('../../models/customplanexercise');
+const yogaworkoutExercises = require('../../models/exercise');
 
 const getCustomPlanExercise = async (req, res) => {
 	try {
@@ -25,7 +26,7 @@ const getCustomPlanExercise = async (req, res) => {
 				let customplanexercise = await getCustomPlanExercises(
 					data.custom_plan_id
 				);
-				if (customPlan) {
+				if (customplanexercise) {
 					return res.status(200).json({
 						data: {
 							success: 0,
@@ -96,7 +97,38 @@ const customPlanExercise = async (req, res) => {
 				});
 			}
 
-			
+			const time = new Date(); // Using current time for created_at and updated_at
+
+			// Create a new instance of the CustomPlanExercise model
+			const newCustomPlanExercise = new yogaworkoutCustomPlanExercise({
+				custom_plan_id: data.custom_plan_id,
+				exercise_id: data.exercise_id,
+				exercise_time: data.exercise_time,
+				created_at: time,
+				updated_at: time,
+			});
+
+			// Save the new document to the database
+			const savedExercise = await newCustomPlanExercise.save();
+
+			// Check if the save was successful
+			if (savedExercise) {
+				res.status(200).json({
+					data: {
+						success: 1,
+						addcustomplanexercise: [],
+						error: 'Add Custom Plan Exercise',
+					},
+				});
+			} else {
+				res.status(200).json({
+					data: {
+						success: 0,
+						addcustomplanexercise: [],
+						error: 'Please Try Again',
+					},
+				});
+			}
 		} else {
 			res.status(200).json({
 				data: {
