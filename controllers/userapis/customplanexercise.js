@@ -252,7 +252,7 @@ const editCustomPlanExercise = async (req, res) => {
 					data: {
 						success: 1,
 						editcustomplanexercise: updatedCustomPlanExercise,
-						error: 'Custom Plan Updated Successfully',
+						error: 'Custom Plan Exercise Updated Successfully',
 					},
 				});
 			} else {
@@ -297,6 +297,28 @@ const deleteCustomPlanExercise = async (req, res) => {
 						success: 0,
 						deletecustomplanexercise: [],
 						error: 'Please login first',
+					},
+				});
+			}
+
+			const deletedCustomPlanExercise =
+				await yogaworkoutCustomPlanExercise.findOneAndDelete({
+					_id: data.custom_plan_exercise_id,
+				});
+			if (deletedCustomPlanExercise) {
+				return res.status(200).json({
+					data: {
+						success: 1,
+						deletecustomplanexercise: [],
+						error: 'Custom Plan Exercise deleted Successfully',
+					},
+				});
+			} else {
+				res.status(400).json({
+					data: {
+						success: 0,
+						deletecustomplanexercise: [],
+						error: 'Please Try Again',
 					},
 				});
 			}
