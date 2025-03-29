@@ -19,19 +19,19 @@ const getAllCategories = async (req, res) => {
 				categories: [],
 			});
 		} else {
-			const categoryWithImages = await Promise.all(
-				categories.map(async (item) => {
-					const updatedItem = item.toObject ? item.toObject() : item;
-					if (item.image !== '') {
-						const imageurl = await getFile(item.image); // Assuming getFile is an async function
-						// console.log("imageurl", imageurl);
-						return { ...updatedItem, image: imageurl }; // Update the image URL
-					}
-					return updatedItem; // Return the item unchanged if no image update is needed
-				})
-			);
+			// const categoryWithImages = await Promise.all(
+			// 	categories.map(async (item) => {
+			// 		const updatedItem = item.toObject ? item.toObject() : item;
+			// 		if (item.image !== '') {
+			// 			const imageurl = await getFile(item.image); // Assuming getFile is an async function
+			// 			// console.log("imageurl", imageurl);
+			// 			return { ...updatedItem, image: imageurl }; // Update the image URL
+			// 		}
+			// 		return updatedItem; // Return the item unchanged if no image update is needed
+			// 	})
+			// );
 			res.status(200).json({
-				categories: categoryWithImages,
+				categories: categories,
 			});
 		}
 	} catch (e) {
@@ -62,10 +62,11 @@ const addCategory = async (req, res) => {
 		}
 		let image = '';
 		if (req.file) {
-			const imageRes = await uploadFile(req.file, 'Category');
-			if (imageRes && imageRes.Key) {
-				image = imageRes.Key;
-			}
+			// const imageRes = await uploadFile(req.file, 'Category');
+			// if (imageRes && imageRes.Key) {
+			// 	image = imageRes.Key;
+			// }
+			image = req.file.path;
 		}
 
 		let categoryName = req.body.categoryName;

@@ -21,19 +21,19 @@ const getAllQuickworkouts = async (req, res) => {
 				quickworkouts:[]
 			});
 		} else {
-			const quickworkoutsWithImages = await Promise.all(
-				quickworkouts.map(async (item) => {
-					const updatedItem = item.toObject ? item.toObject() : item;
-					if (item.image !== '') {
-						const imageurl = await getFile(item.image); // Assuming getFile is an async function
-						// console.log("imageurl", imageurl);
-						return { ...updatedItem, image: imageurl }; // Update the image URL
-					}
-					return updatedItem; // Return the item unchanged if no image update is needed
-				})
-			);
+			// const quickworkoutsWithImages = await Promise.all(
+			// 	quickworkouts.map(async (item) => {
+			// 		const updatedItem = item.toObject ? item.toObject() : item;
+			// 		if (item.image !== '') {
+			// 			const imageurl = await getFile(item.image); // Assuming getFile is an async function
+			// 			// console.log("imageurl", imageurl);
+			// 			return { ...updatedItem, image: imageurl }; // Update the image URL
+			// 		}
+			// 		return updatedItem; // Return the item unchanged if no image update is needed
+			// 	})
+			// );
 			res.status(200).json({
-				quickworkouts: quickworkoutsWithImages,
+				quickworkouts: quickworkouts,
 			});
 		}
 	} catch (e) {
@@ -65,10 +65,11 @@ const addQuickworkout = async (req, res) => {
 
 		let image = '';
 		if (req.file) {
-			const imageRes = await uploadFile(req.file, 'QuickWorkout');
-			if (imageRes && imageRes.Key) {
-				image = imageRes.Key;
-			}
+			// const imageRes = await uploadFile(req.file, 'QuickWorkout');
+			// if (imageRes && imageRes.Key) {
+			// 	image = imageRes.Key;
+			// }
+			image = req.file.path;
 		}
 
 		let quickworkoutName = req.body.quickworkoutName;

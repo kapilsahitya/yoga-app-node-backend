@@ -19,19 +19,19 @@ const getAllDiscovers = async (req, res) => {
 				discovers: []
 			});
 		} else {
-			const discoversWithImages = await Promise.all(
-				discovers.map(async (item) => {
-					const updatedItem = item.toObject ? item.toObject() : item;
-					if (item.image !== '') {
-						const imageurl = await getFile(item.image); // Assuming getFile is an async function
-						// console.log("imageurl", imageurl);
-						return { ...updatedItem, image: imageurl }; // Update the image URL
-					}
-					return updatedItem; // Return the item unchanged if no image update is needed
-				})
-			);
+			// const discoversWithImages = await Promise.all(
+			// 	discovers.map(async (item) => {
+			// 		const updatedItem = item.toObject ? item.toObject() : item;
+			// 		if (item.image !== '') {
+			// 			const imageurl = await getFile(item.image); // Assuming getFile is an async function
+			// 			// console.log("imageurl", imageurl);
+			// 			return { ...updatedItem, image: imageurl }; // Update the image URL
+			// 		}
+			// 		return updatedItem; // Return the item unchanged if no image update is needed
+			// 	})
+			// );
 			res.status(200).json({
-				discovers: discoversWithImages,
+				discovers: discovers,
 			});
 		}
 	} catch (e) {
@@ -62,10 +62,11 @@ const addDiscover = async (req, res) => {
 		}
 		let image = '';
 		if (req.file) {
-			const imageRes = await uploadFile(req.file, 'Discover');
-			if (imageRes && imageRes.Key) {
-				image = imageRes.Key;
-			}
+			// const imageRes = await uploadFile(req.file, 'Discover');
+			// if (imageRes && imageRes.Key) {
+			// 	image = imageRes.Key;
+			// }
+			image = req.file.path;
 		}
 
 		let discoverName = req.body.discoverName;

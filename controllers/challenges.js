@@ -11,19 +11,19 @@ const getAllChallenges = async (req, res) => {
 				challenges : [],
 			});
 		} else {
-			const challengesWithImages = await Promise.all(
-				challenges.map(async (item) => {
-					const updatedItem = item.toObject ? item.toObject() : item;
-					if (item.image !== '') {
-						const imageurl = await getFile(item.image); // Assuming getFile is an async function
-						// console.log("imageurl", imageurl);
-						return { ...updatedItem, image: imageurl }; // Update the image URL
-					}
-					return updatedItem; // Return the item unchanged if no image update is needed
-				})
-			);
+			// const challengesWithImages = await Promise.all(
+			// 	challenges.map(async (item) => {
+			// 		const updatedItem = item.toObject ? item.toObject() : item;
+			// 		if (item.image !== '') {
+			// 			const imageurl = await getFile(item.image); // Assuming getFile is an async function
+			// 			// console.log("imageurl", imageurl);
+			// 			return { ...updatedItem, image: imageurl }; // Update the image URL
+			// 		}
+			// 		return updatedItem; // Return the item unchanged if no image update is needed
+			// 	})
+			// );
 			res.status(200).json({
-				challenges: challengesWithImages,
+				challenges: challenges,
 			});
 		}
 	} catch (e) {
@@ -43,10 +43,11 @@ const addChallenges = async (req, res) => {
 		}
 		let image = '';
 		if (req.file) {
-			const imageRes = await uploadFile(req.file, 'Challenges');
-			if (imageRes && imageRes.Key) {
-				image = imageRes.Key;
-			}
+			// const imageRes = await uploadFile(req.file, 'Challenges');
+			// if (imageRes && imageRes.Key) {
+			// 	image = imageRes.Key;
+			// }
+			image = req.file.path;
 		}
 
 		let challengesName = req.body.challengesName;
