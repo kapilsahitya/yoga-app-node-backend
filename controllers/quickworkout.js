@@ -18,7 +18,7 @@ const getAllQuickworkouts = async (req, res) => {
 		if (quickworkouts.length === 0) {
 			return res.status(200).json({
 				message: 'No Quickworkout Added!',
-				quickworkouts:[]
+				quickworkouts: []
 			});
 		} else {
 			// const quickworkoutsWithImages = await Promise.all(
@@ -164,9 +164,33 @@ const deleteQuickworkout = async (req, res) => {
 			}
 			else {
 				if (documentExists.image) {
-					ImageToDelet = documentExists.image;
-					const imageRes = await deleteFile(ImageToDelet);
-					// console.log("imageRes", imageRes)
+					try {
+						const fullPath = path.join(__dirname, '..', documentExists.image);
+						// console.log('fullPath', fullPath)
+						const uploadsDir = path.join(__dirname, '..');
+						if (!path.normalize(fullPath).startsWith(path.normalize(uploadsDir))) {
+							throw new Error('Invalid file path - security violation');
+						}
+
+						// Check if file exists before deleting
+						try {
+							await fs.access(fullPath);
+							await fs.unlink(fullPath);
+
+						} catch (fileError) {
+							console.log("fileError", fileError)
+							if (fileError.code === 'ENOENT') {
+								console.warn('File not found, may have been deleted already');
+							} else {
+								throw fileError;
+							}
+						}
+					} catch (fileError) {
+						console.error('Error deleting file:', fileError);
+						// Continue with DB deletion even if file deletion fails
+					}
+					// ImageToDelet = documentExists.image;
+					// const imageRes = await deleteFile(ImageToDelet);
 				}
 			}
 

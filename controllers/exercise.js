@@ -161,7 +161,6 @@ const deleteExercise = async (req, res) => {
 
 						// Check if file exists before deleting
 						try {
-							console.log("fullPath", fullPath)
 							await fs.access(fullPath);
 							await fs.unlink(fullPath);
 
